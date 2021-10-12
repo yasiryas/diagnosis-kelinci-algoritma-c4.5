@@ -30,6 +30,7 @@
                  <i class="fas fa-users"></i>
                  <span>User List</span></a>
          </li>
+
          <!-- Nav Item - Management data -->
          <li class="nav-item <?= ($title == 'Management Data' || $title == 'Gejala' || $title == 'Penyakit' || $title == 'Data Diagnosis') ? 'active' : ''; ?>">
              <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
@@ -43,6 +44,13 @@
                      <a class="collapse-item <?= ($title == 'Data Sample') ? 'active' : ''; ?>" href="<?= base_url('admin/datasample'); ?>">Data Sample</a>
                  </div>
              </div>
+         </li>
+
+         <!-- Nav Item - Decission Tree -->
+         <li class="nav-item <?= ($title == 'Decision Tree') ? 'active' : ''; ?>">
+             <a class="nav-link" href="<?= base_url('admin/decisiontree'); ?>">
+                 <i class="fas fa-code-branch"></i>
+                 <span>Decision Tree</span></a>
          </li>
 
 

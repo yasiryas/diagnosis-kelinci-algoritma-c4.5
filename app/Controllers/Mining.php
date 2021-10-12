@@ -63,13 +63,23 @@ class mining extends BaseController
         $jumlahGejalaKasus = $this->sampleModel->getMiningKasus();
 
 
-
         //======================Data Mining -> Algorithm C4.5==================================
+
+        //Start mining transfer data data_sample to mining_sample
+        // $this->sampleModel->clearMiningSample();
+        // $this->sampleModel->startMiningSample();
+
+        $startCabang = " ";
+
+        //Kosongkan Pohon Keputusan
+        // $this->sampleModel->clearDecisionTree();
+
 
         //Menghitung entropy total
         $entropytotal = 0;
         foreach ($jumlahpenyakit as $jp) :
             $jumlahAtribut = ($jp->total) / ($atribut->atribut);
+            // var_dump($jumlahAtribut);
             $proportion = $jumlahAtribut / $jumlahkasus;
             $entropy = (-$proportion * log($proportion, 2));
             $entropytotal += $entropy;
@@ -226,39 +236,47 @@ class mining extends BaseController
         foreach ($viewGain as $vg) :
             $id_gejala = $vg->id_gejala;
             $kategori = $vg->kategori;
-            $gejala = $vg->gejala;
+            // $gejala = $vg->gejala;
+            $keputusan = $vg->id_penyakit;
             $entropyAtribut = $this->sampleModel->getEntropy($id_gejala);
+
+            // 3. Membuat pohon keputusan pada tabel pohon keputusan
             foreach ($entropyAtribut as $entropy) :
                 $value = $entropy->entropy;
                 if ($value == 0) {
-                    $this->sampleModel->savePemangkasan($kategori, $gejala);
+                    // $this->sampleModel->savePemangkasan($kategori, $gejala);
+                    $parent = $startCabang .  ' ($gejala == ' . $id_gejala . ')';
+                    $this->sampleModel->saveDecisionTree(
+                        // $startCabang . ' ($gejala == ' . $id_gejala . ')',
+                        $parent,
+                        $kategori,
+                        $keputusan
+                    );
+
+                    // 4. Menghapus data Node dari data sample
+                    $this->sampleModel->deleteMiningSample($id_gejala);
+                } else {
+                    // ($startCabang == " " ? $and = ' &&' : $and = '');
+                    $and = "";
+                    if ($startCabang == " ") {
+                        $and = ' && ';
+                    } else {
+                        $and = "";
+                    }
+
+                    $cabang = ' ($gejala == ' . $id_gejala . ')' . $and;
+
+                    // 4. Menghapus data Node dari data sample
+                    $this->sampleModel->deleteMiningSample($id_gejala);
                 }
             // var_dump($entropyAtribut);
             endforeach;
         endforeach;
-        // // var_dump($kategoriGain);
-        // $pangkas = $this->sampleModel->getPemangkasan();
-        // foreach ($pangkas as $p) :
-        //     $parent = $vg->id_gejala;
-        //     $akar = $vg->kategori;
-        //     $keputusan = $vg->penyakit;
-        //     $gejalaP = $p->gejala;
-        //     $totalP = $p->total;
-        //     // var_dump($gejala);
-        //     // if ($gejalaP == $gejala and $totalP == 1) {
-        //     //     $this->sampleModel->saveDecisionTree(
-        //     //         $parent,
-        //     //         $akar,
-        //     //         $keputusan
-        //     //     );
-        //     // }
-        // endforeach;
+        $startCabang .= $cabang;
+        var_dump($startCabang);
 
 
-
-        // 3. Membuat pohon keputusan pada tabel pohon keputusan
-        // 4. Menghapus data Node dari data sample
-        // 5. Membuat pengulangan pada Mining
+        // 5. Membuat pengulangan pada Mining 
         //============= End Membuat Cabang Pohon Keputusan =======
 
 
