@@ -42,6 +42,7 @@
                 <thead>
                     <tr>
                         <th scope="col">No.</th>
+                        <th scope="col">Id Gejala</th>
                         <th scope="col">Kategori</th>
                         <th scope="col">Gejala</th>
                         <th scope="col">Action</th>
@@ -53,6 +54,7 @@
                     foreach ($gejala as $g) : ?>
                         <tr>
                             <th scope="row"><?= $i++; ?></th>
+                            <td><?= $g['id_gejala']; ?></td>
                             <td><?= $g['kategori']; ?></td>
                             <td><?= $g['gejala']; ?></td>
                             <td>

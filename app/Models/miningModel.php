@@ -4,9 +4,9 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class sampleModel extends Model
+class miningModel extends Model
 {
-    protected $table = 'data_sample';
+    protected $table = 'mining_sample';
     protected $allowedFields = [
         'id_sample', 'id_gejala', 'id_penyakit',
     ];
@@ -21,12 +21,12 @@ class sampleModel extends Model
         return $builder;
     }
 
-    public function getView()
+    public function getData()
     {
-        $builder = $this->table('data_sample');
-        $builder->select('data_sample.id_sample, data_gejala.kategori, data_gejala.gejala, data_penyakit.penyakit');
-        $builder->join('data_gejala', 'data_sample.id_gejala = data_gejala.id_gejala');
-        $builder->join('data_penyakit', 'data_sample.id_penyakit = data_penyakit.id_penyakit');
+        $builder = $this->table('mining_sample');
+        $builder->select('mining_sample.id_sample, data_gejala.kategori, data_gejala.gejala, data_penyakit.penyakit');
+        $builder->join('data_gejala', 'mining_sample.id_gejala = data_gejala.id_gejala');
+        $builder->join('data_penyakit', 'mining_sample.id_penyakit = data_penyakit.id_penyakit');
         $query = $this->builder->get();
         return $query;
 

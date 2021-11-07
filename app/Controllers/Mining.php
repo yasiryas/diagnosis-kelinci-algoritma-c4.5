@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\gejalaModel;
 use App\Models\penyakitModel;
 use App\Models\sampleModel;
+use App\Models\miningModel;
 
 
 class mining extends BaseController
@@ -24,18 +25,22 @@ class mining extends BaseController
         $this->gejalaModel = new gejalaModel();
         $this->penyakitModel = new penyakitModel();
         $this->sampleModel = new sampleModel();
+        $this->miningModel = new miningModel();
     }
 
     //Percobaan satu dengan penuh kesalahan 
     //Tempat berbuat salah
     public function hitung()
     {
-        $atribut = $this->sampleModel->getJumlahAtribut();
-        $jumlahkasus = ($this->sampleModel->getView()->getNumRows()) / ($atribut->atribut);
-        $kasus = $this->sampleModel->getKasus();
-        $jumlahpenyakit = $this->sampleModel->getJumlahPenyakit();
-        $jumlahkasuspenyakit = $this->sampleModel->getJumlahKasusPenyakit();
-        $jumlahgejala = $this->sampleModel->getJumlahGejala();
+
+        // $jumlahkasus = 0;
+
+        $atribut = $this->miningModel->getJumlahAtribut();
+        $jumlahkasus = ($this->miningModel->getData()->getNumRows()) / ($atribut->atribut);
+        $kasus = $this->miningModel->getKasus();
+        $jumlahpenyakit = $this->miningModel->getJumlahPenyakit();
+        $jumlahkasuspenyakit = $this->miningModel->getJumlahKasusPenyakit();
+        $jumlahgejala = $this->miningModel->getJumlahGejala();
 
 
         $data['title'] = 'Data Mining';
@@ -54,25 +59,29 @@ class mining extends BaseController
     public function mining()
     {
         //penyiapan variabel untuk bahan mining
-        $atribut = $this->sampleModel->getJumlahAtribut();
-        $jumlahkasus = ($this->sampleModel->getView()->getNumRows()) / ($atribut->atribut);
-        $kasus = $this->sampleModel->getKasus();
-        $jumlahpenyakit = $this->sampleModel->getJumlahPenyakit();
-        $jumlahkasuspenyakit = $this->sampleModel->getJumlahKasusPenyakit();
-        $jumlahgejala = $this->sampleModel->getJumlahGejala();
-        $jumlahGejalaKasus = $this->sampleModel->getMiningKasus();
+        $jumlahkasus = 0;
+
+
+        //isi variabel
+        $atribut = $this->miningModel->getJumlahAtribut();
+        $jumlahkasus = ($this->miningModel->getData()->getNumRows()) / ($atribut->atribut);
+        $kasus = $this->miningModel->getKasus();
+        $jumlahpenyakit = $this->miningModel->getJumlahPenyakit();
+        $jumlahkasuspenyakit = $this->miningModel->getJumlahKasusPenyakit();
+        $jumlahgejala = $this->miningModel->getJumlahGejala();
+        $jumlahGejalaKasus = $this->miningModel->getMiningKasus();
 
 
         //======================Data Mining -> Algorithm C4.5==================================
 
         //Start mining transfer data data_sample to mining_sample
         // $this->sampleModel->clearMiningSample();
-        // $this->sampleModel->startMiningSample();
+        // $this->miningModel->startMiningSample();
 
         $startCabang = " ";
 
         //Kosongkan Pohon Keputusan
-        // $this->sampleModel->clearDecisionTree();
+        // $this->miningModel->clearDecisionTree();
 
 
         //Menghitung entropy total
@@ -88,27 +97,27 @@ class mining extends BaseController
         //Menghitung Entropy Tiap Value 
 
         //1. Menyimpan data jumlah total gejala dengan penyakit
-        $this->sampleModel->clearMiningEntropy();
+        $this->miningModel->clearMiningEntropy();
         foreach ($jumlahkasuspenyakit as $jkp) :
             $idGejala = $jkp->id_gejala;
             $idPenyakit = $jkp->id_penyakit;
             $total = $jkp->total;
-            $this->sampleModel->saveMiningEntropy($idGejala, $idPenyakit, $total);
+            $this->miningModel->saveMiningEntropy($idGejala, $idPenyakit, $total);
         endforeach;
 
         //2. menyimpan data jumlah kasus yang terjadi
-        $this->sampleModel->clearMiningKasus();
+        $this->miningModel->clearMiningKasus();
         foreach ($kasus as $k) :
             $atributKasus = $k->id_gejala;
             $totalKasus = $k->total;
-            $this->sampleModel->saveMiningKasus($atributKasus, $totalKasus);
+            $this->miningModel->saveMiningKasus($atributKasus, $totalKasus);
         endforeach;
 
         //3. Formula hitung entropy tiap atribut
 
         //=============Hitung entropy=============
 
-        $this->sampleModel->clearEntropy();
+        $this->miningModel->clearEntropy();
         $entropyHitung = $entropytotal;
         $entropyAtr = 0;
         $gainAtr = 0;
@@ -125,10 +134,10 @@ class mining extends BaseController
 
                 if ($entropyAtr != 0) {
                     $idGejala = $jkp->id_gejala;
-                    $this->sampleModel->saveEntropy($idGejala, $entropyAtr);
+                    $this->miningModel->saveEntropy($idGejala, $entropyAtr);
                 } else {
                     $idGejala = $jkp->id_gejala;
-                    $this->sampleModel->saveEntropy($idGejala, $entropyAtr);
+                    $this->miningModel->saveEntropy($idGejala, $entropyAtr);
                 }
             endforeach;
         endforeach;
@@ -139,11 +148,11 @@ class mining extends BaseController
         $entropyGainTotal = $entropytotal;
         $jumlahKasus = $jumlahkasus;
         $gain2 = 0;
-        $this->sampleModel->clearMiningGain();
+        $this->miningModel->clearMiningGain();
         foreach ($kasus as $k) :
             $id_gejala = $k->id_gejala;
             $kategori = $k->kategori;
-            $entropyAtribut = $this->sampleModel->getEntropy($id_gejala);
+            $entropyAtribut = $this->miningModel->getEntropy($id_gejala);
             foreach ($entropyAtribut as $entropy) :
                 $kategori2 = $entropy->kategori;
                 $totalgejalakasus = $k->total;
@@ -151,7 +160,7 @@ class mining extends BaseController
                     $ea = $entropy->entropy;
                     $gain1 = ($totalgejalakasus / $jumlahKasus) * $ea;
                     $gain2 = $gain1;
-                    $this->sampleModel->saveMiningGain($kategori2, $gain2);
+                    $this->miningModel->saveMiningGain($kategori2, $gain2);
                 } else {
                     $gain1 = 0;
                     $gain2 = 0;
@@ -161,14 +170,14 @@ class mining extends BaseController
         endforeach;
 
 
-        $this->sampleModel->clearGain();
-        $miningGain = $this->sampleModel->getMiningGain();
+        $this->miningModel->clearGain();
+        $miningGain = $this->miningModel->getMiningGain();
         foreach ($miningGain as $m) :
             $entropyTotal = $entropytotal;
             $kategori = $m->kategori;
             $gainMining = $m->gain;
             $gain = $entropyTotal - $gainMining;
-            $this->sampleModel->saveGain($kategori, $gain);
+            $this->miningModel->saveGain($kategori, $gain);
         endforeach;
 
 
@@ -178,7 +187,7 @@ class mining extends BaseController
         //=============Hitung Split Info =========
         $splitinfo = 0;
         $si = 0;
-        $this->sampleModel->clearMiningSplitInfo();
+        $this->miningModel->clearMiningSplitInfo();
         foreach ($kasus as $k) :
             $id_gejala = $k->id_gejala;
             $kategori = $k->kategori;
@@ -186,7 +195,7 @@ class mining extends BaseController
 
             $splitinfo = (- ($totalgejalakasus / $jumlahKasus)) *  log(($totalgejalakasus / $jumlahKasus), 2);
             $si += $splitinfo;
-            $this->sampleModel->saveMiningSplitInfo($kategori, $si);
+            $this->miningModel->saveMiningSplitInfo($kategori, $si);
 
             $si = 0;
             $splitinfo = 0;
@@ -194,20 +203,20 @@ class mining extends BaseController
         endforeach;
 
 
-        // $miningSplitInfo = $this->sampleModel->getMiningSplitInfo();
+        // $miningSplitInfo = $this->miningModel->getMiningSplitInfo();
         // foreach ($miningSplitInfo as $splitinfo) :
         //     $kategori = $splitinfo->kategori;
         //     $saveSplitInfo = $splitinfo->splitinfo;
-        //     $this->sampleModel->saveSplitInfo($kategori, $saveSplitInfo);
+        //     $this->miningModel->saveSplitInfo($kategori, $saveSplitInfo);
         // endforeach;
         //=============End Hitung Split Info ===========
 
 
         //============= Hitung Gain Ratio =============
 
-        $splitinfoForGainRatio = $this->sampleModel->getMiningSplitInfo();
-        $gainForGainRatio = $this->sampleModel->getGain();
-        $this->sampleModel->clearGainRatio();
+        $splitinfoForGainRatio = $this->miningModel->getMiningSplitInfo();
+        $gainForGainRatio = $this->miningModel->getGain();
+        $this->miningModel->clearGainRatio();
         foreach ($splitinfoForGainRatio as $splitinfo) :
             $hitungSplitInfo = $splitinfo->total;
             $kategori = $splitinfo->kategori;
@@ -216,7 +225,7 @@ class mining extends BaseController
                 $hitungGain = $gain->gain;
                 if ($kategori == $kategori1) {
                     $gainRatio = $hitungGain / $hitungSplitInfo;
-                    $this->sampleModel->saveGainRatio($kategori, $gainRatio);
+                    $this->miningModel->saveGainRatio($kategori, $gainRatio);
                 }
             endforeach;
         endforeach;
@@ -224,29 +233,29 @@ class mining extends BaseController
         //============= End Hitung Gain Ratio ==========
 
         //============= Membuat Cabang Pohon Keputusan ==========
-        $this->sampleModel->clearPemangkasan();
+        $this->miningModel->clearPemangkasan();
         // 1. Memilih Nilai Gain Tertinggi => Result = Atribut/Kategori   
-        $topGain = $this->sampleModel->getTopGain();
+        $topGain = $this->miningModel->getTopGain();
 
         // 2. Memisah dengan Atribut -> Gejala dan Penyakit
         foreach ($topGain as $tg) :
             $kategoriGain = $tg->kategori;
         endforeach;
-        $viewGain = $this->sampleModel->getViewTopGain($kategoriGain);
+        $viewGain = $this->miningModel->getViewTopGain($kategoriGain);
         foreach ($viewGain as $vg) :
             $id_gejala = $vg->id_gejala;
             $kategori = $vg->kategori;
             // $gejala = $vg->gejala;
             $keputusan = $vg->id_penyakit;
-            $entropyAtribut = $this->sampleModel->getEntropy($id_gejala);
+            $entropyAtribut = $this->miningModel->getEntropy($id_gejala);
 
             // 3. Membuat pohon keputusan pada tabel pohon keputusan
             foreach ($entropyAtribut as $entropy) :
                 $value = $entropy->entropy;
                 if ($value == 0) {
-                    // $this->sampleModel->savePemangkasan($kategori, $gejala);
+                    // $this->miningModel->savePemangkasan($kategori, $gejala);
                     $parent = $startCabang .  ' ($gejala == ' . $id_gejala . ')';
-                    $this->sampleModel->saveDecisionTree(
+                    $this->miningModel->saveDecisionTree(
                         // $startCabang . ' ($gejala == ' . $id_gejala . ')',
                         $parent,
                         $kategori,
@@ -254,7 +263,8 @@ class mining extends BaseController
                     );
 
                     // 4. Menghapus data Node dari data sample
-                    $this->sampleModel->deleteMiningSample($id_gejala);
+                    $this->miningModel->deleteMiningSampleGejala($id_gejala);
+                    $this->miningModel->deleteMiningSamplePenyakit($keputusan);
                 } else {
                     // ($startCabang == " " ? $and = ' &&' : $and = '');
                     $and = "";
@@ -267,7 +277,9 @@ class mining extends BaseController
                     $cabang = ' ($gejala == ' . $id_gejala . ')' . $and;
 
                     // 4. Menghapus data Node dari data sample
-                    $this->sampleModel->deleteMiningSample($id_gejala);
+                    // $this->miningModel->deleteMiningSample($id_gejala);
+                    // $this->miningModel->deleteMiningSamplePenyakit($keputusan);
+                    $this->miningModel->deleteMiningSampleGejala($id_gejala);
                 }
             // var_dump($entropyAtribut);
             endforeach;

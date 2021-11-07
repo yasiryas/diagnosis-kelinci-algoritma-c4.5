@@ -6,6 +6,7 @@ use App\Models\listModel;
 use App\Models\gejalaModel;
 use App\Models\penyakitModel;
 use App\Models\sampleModel;
+use App\Models\decisionTreeModel;
 
 
 class admin extends BaseController
@@ -27,6 +28,7 @@ class admin extends BaseController
         $this->gejalaModel = new gejalaModel();
         $this->penyakitModel = new penyakitModel();
         $this->sampleModel = new sampleModel();
+        $this->decisionTreeModel = new decisionTreeModel();
     }
 
     public function profile()
@@ -296,5 +298,38 @@ class admin extends BaseController
         }
 
         return view('admin/detail', $data);
+    }
+
+    public function decisionTree()
+    {
+        $currentPage = $this->request->getVar('decision_tree') ? $this->request->getVar('decision_tree') : 1;
+
+        $keyword = $this->request->getVar('keyword');
+        if ($keyword) {
+            $decisiontree = $this->decisionTreeModel->search($keyword);
+        } else {
+            $decisiontree = $this->decisionTreeModel;
+        }
+
+        $page = 8;
+        // $data = [
+        //     'title' => 'Decision Tree',
+        //     'decisiontree' => $decisiontree->paginate($page, 'decision_tree'),
+        //     'pager' => $this->decisionTreeModel->pager,
+        //     'currentPage' => $currentPage,
+        //     'page' => $page,
+        // ];
+
+        $data = [
+            'title' => 'Decision Tree',
+            'decisiontree' => $decisiontree->select('decision_tree.parent, decision_tree.akar, decision_tree.keputusan, data_penyakit.penyakit')
+                ->join('data_penyakit', 'data_penyakit.id_penyakit = decision_tree.keputusan')->paginate($page, 'decision_tree'),
+            'pager' => $this->decisionTreeModel->pager,
+            'currentPage' => $currentPage,
+            'page' => $page,
+        ];
+        $data['penyakit'] = $this->penyakitModel->findall();
+
+        return view('admin/decisiontree', $data);
     }
 }
