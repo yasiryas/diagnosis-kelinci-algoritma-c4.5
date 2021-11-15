@@ -306,7 +306,7 @@ class miningModel extends Model
     public function getViewTopGain($kategori)
     {
         // $query = $this->db->query("SELECT data_gejala.id_gejala, data_penyakit.id_penyakit, data_gejala.kategori,data_gejala.gejala,data_penyakit.penyakit, COUNT(penyakit) as total FROM data_sample join data_gejala ON data_sample.id_gejala = data_gejala.id_gejala JOIN data_penyakit ON data_sample.id_penyakit = data_penyakit.id_penyakit WHERE kategori = '$kategori' GROUP BY kategori,gejala,penyakit ORDER BY `data_gejala`.`gejala` DESC");
-        $query = $this->db->query("SELECT data_gejala.id_gejala, data_penyakit.id_penyakit, data_gejala.kategori,data_gejala.gejala,data_penyakit.penyakit, COUNT(penyakit) as total FROM data_sample join data_gejala ON data_sample.id_gejala = data_gejala.id_gejala JOIN data_penyakit ON data_sample.id_penyakit = data_penyakit.id_penyakit WHERE kategori = '$kategori' GROUP BY kategori,gejala ORDER BY `data_gejala`.`gejala` DESC");
+        $query = $this->db->query("SELECT data_gejala.id_gejala, data_penyakit.id_penyakit, data_gejala.kategori,data_gejala.gejala,data_penyakit.penyakit, COUNT(penyakit) as total FROM mining_sample join data_gejala ON mining_sample.id_gejala = data_gejala.id_gejala JOIN data_penyakit ON mining_sample.id_penyakit = data_penyakit.id_penyakit WHERE kategori = '$kategori' GROUP BY kategori,gejala ORDER BY `data_gejala`.`gejala` DESC");
         $gain = $query->getResult();
         return $gain;
     }

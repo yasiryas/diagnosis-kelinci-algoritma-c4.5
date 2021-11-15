@@ -58,259 +58,270 @@ class mining extends BaseController
 
     public function mining()
     {
+        //Kosongkan Pohon Keputusan dan Sample
+        $this->miningModel->clearDecisionTree();
+        $this->miningModel->clearMiningSample();
+        
+        //Start mining transfer data data_sample to mining_sample
+        $this->miningModel->startMiningSample();
+        
         //penyiapan variabel untuk bahan mining
         $jumlahkasus = 0;
-
-
-        //isi variabel
+        $startCabang = " ";
         $atribut = $this->miningModel->getJumlahAtribut();
-        $jumlahkasus = ($this->miningModel->getData()->getNumRows()) / ($atribut->atribut);
-        $kasus = $this->miningModel->getKasus();
-        $jumlahpenyakit = $this->miningModel->getJumlahPenyakit();
-        $jumlahkasuspenyakit = $this->miningModel->getJumlahKasusPenyakit();
-        $jumlahgejala = $this->miningModel->getJumlahGejala();
-        $jumlahGejalaKasus = $this->miningModel->getMiningKasus();
 
 
         //======================Data Mining -> Algorithm C4.5==================================
 
-        //Start mining transfer data data_sample to mining_sample
-        // $this->sampleModel->clearMiningSample();
-        // $this->miningModel->startMiningSample();
 
-        $startCabang = " ";
+        //Start Perulangan (while)
+        $i = $atribut->atribut;
+        while ($i > 0) {
 
-        //Kosongkan Pohon Keputusan
-        // $this->miningModel->clearDecisionTree();
-
-
-        //Menghitung entropy total
-        $entropytotal = 0;
-        foreach ($jumlahpenyakit as $jp) :
-            $jumlahAtribut = ($jp->total) / ($atribut->atribut);
-            // var_dump($jumlahAtribut);
-            $proportion = $jumlahAtribut / $jumlahkasus;
-            $entropy = (-$proportion * log($proportion, 2));
-            $entropytotal += $entropy;
-        endforeach;
-
-        //Menghitung Entropy Tiap Value 
-
-        //1. Menyimpan data jumlah total gejala dengan penyakit
-        $this->miningModel->clearMiningEntropy();
-        foreach ($jumlahkasuspenyakit as $jkp) :
-            $idGejala = $jkp->id_gejala;
-            $idPenyakit = $jkp->id_penyakit;
-            $total = $jkp->total;
-            $this->miningModel->saveMiningEntropy($idGejala, $idPenyakit, $total);
-        endforeach;
-
-        //2. menyimpan data jumlah kasus yang terjadi
-        $this->miningModel->clearMiningKasus();
-        foreach ($kasus as $k) :
-            $atributKasus = $k->id_gejala;
-            $totalKasus = $k->total;
-            $this->miningModel->saveMiningKasus($atributKasus, $totalKasus);
-        endforeach;
-
-        //3. Formula hitung entropy tiap atribut
-
-        //=============Hitung entropy=============
-
-        $this->miningModel->clearEntropy();
-        $entropyHitung = $entropytotal;
-        $entropyAtr = 0;
-        $gainAtr = 0;
+            //isi variabel
+            $jumlahkasus = ($this->miningModel->getData()->getNumRows()) / ($atribut->atribut);
+            $kasus = $this->miningModel->getKasus();
+            $jumlahpenyakit = $this->miningModel->getJumlahPenyakit();
+            $jumlahkasuspenyakit = $this->miningModel->getJumlahKasusPenyakit();
+            $jumlahgejala = $this->miningModel->getJumlahGejala();
+            $jumlahGejalaKasus = $this->miningModel->getMiningKasus();
 
 
-        foreach ($jumlahgejala as $jg) :
+
+            //Menghitung entropy total
+            $entropytotal = 0;
+            foreach ($jumlahpenyakit as $jp) :
+                $jumlahAtribut = ($jp->total) / ($atribut->atribut);
+                // var_dump($jumlahAtribut);
+                $proportion = $jumlahAtribut / $jumlahkasus;
+                $entropy = (-$proportion * log($proportion, 2));
+                $entropytotal += $entropy;
+            endforeach;
+
+            //Menghitung Entropy Tiap Value 
+
+            //1. Menyimpan data jumlah total gejala dengan penyakit
+            $this->miningModel->clearMiningEntropy();
             foreach ($jumlahkasuspenyakit as $jkp) :
-                if ($jkp->id_gejala == $jg->id_gejala) {
-                    $entropyA = (- ($jkp->total / $jg->total) * log(($jkp->total / $jg->total), 2));
-                    $entropyAtr += $entropyA;
-                } else {
-                    $entropyAtr = 0;
-                }
-
-                if ($entropyAtr != 0) {
-                    $idGejala = $jkp->id_gejala;
-                    $this->miningModel->saveEntropy($idGejala, $entropyAtr);
-                } else {
-                    $idGejala = $jkp->id_gejala;
-                    $this->miningModel->saveEntropy($idGejala, $entropyAtr);
-                }
+                $idGejala = $jkp->id_gejala;
+                $idPenyakit = $jkp->id_penyakit;
+                $total = $jkp->total;
+                $this->miningModel->saveMiningEntropy($idGejala, $idPenyakit, $total);
             endforeach;
-        endforeach;
 
-        //=============End  Hitung entropy==========
-
-        //=============Hitung Gain ============
-        $entropyGainTotal = $entropytotal;
-        $jumlahKasus = $jumlahkasus;
-        $gain2 = 0;
-        $this->miningModel->clearMiningGain();
-        foreach ($kasus as $k) :
-            $id_gejala = $k->id_gejala;
-            $kategori = $k->kategori;
-            $entropyAtribut = $this->miningModel->getEntropy($id_gejala);
-            foreach ($entropyAtribut as $entropy) :
-                $kategori2 = $entropy->kategori;
-                $totalgejalakasus = $k->total;
-                if ($kategori == $kategori2) {
-                    $ea = $entropy->entropy;
-                    $gain1 = ($totalgejalakasus / $jumlahKasus) * $ea;
-                    $gain2 = $gain1;
-                    $this->miningModel->saveMiningGain($kategori2, $gain2);
-                } else {
-                    $gain1 = 0;
-                    $gain2 = 0;
-                    $entropyGainTotal = $entropytotal;
-                }
+            //2. menyimpan data jumlah kasus yang terjadi
+            $this->miningModel->clearMiningKasus();
+            foreach ($kasus as $k) :
+                $atributKasus = $k->id_gejala;
+                $totalKasus = $k->total;
+                $this->miningModel->saveMiningKasus($atributKasus, $totalKasus);
             endforeach;
-        endforeach;
+
+            //3. Formula hitung entropy tiap atribut
+
+            //=============Hitung entropy=============
+
+            $this->miningModel->clearEntropy();
+            $entropyHitung = $entropytotal;
+            $entropyAtr = 0;
+            $gainAtr = 0;
 
 
-        $this->miningModel->clearGain();
-        $miningGain = $this->miningModel->getMiningGain();
-        foreach ($miningGain as $m) :
-            $entropyTotal = $entropytotal;
-            $kategori = $m->kategori;
-            $gainMining = $m->gain;
-            $gain = $entropyTotal - $gainMining;
-            $this->miningModel->saveGain($kategori, $gain);
-        endforeach;
-
-
-        //=============End Hitung Gain =========
-
-
-        //=============Hitung Split Info =========
-        $splitinfo = 0;
-        $si = 0;
-        $this->miningModel->clearMiningSplitInfo();
-        foreach ($kasus as $k) :
-            $id_gejala = $k->id_gejala;
-            $kategori = $k->kategori;
-            $totalgejalakasus = $k->total;
-
-            $splitinfo = (- ($totalgejalakasus / $jumlahKasus)) *  log(($totalgejalakasus / $jumlahKasus), 2);
-            $si += $splitinfo;
-            $this->miningModel->saveMiningSplitInfo($kategori, $si);
-
-            $si = 0;
-            $splitinfo = 0;
-
-        endforeach;
-
-
-        // $miningSplitInfo = $this->miningModel->getMiningSplitInfo();
-        // foreach ($miningSplitInfo as $splitinfo) :
-        //     $kategori = $splitinfo->kategori;
-        //     $saveSplitInfo = $splitinfo->splitinfo;
-        //     $this->miningModel->saveSplitInfo($kategori, $saveSplitInfo);
-        // endforeach;
-        //=============End Hitung Split Info ===========
-
-
-        //============= Hitung Gain Ratio =============
-
-        $splitinfoForGainRatio = $this->miningModel->getMiningSplitInfo();
-        $gainForGainRatio = $this->miningModel->getGain();
-        $this->miningModel->clearGainRatio();
-        foreach ($splitinfoForGainRatio as $splitinfo) :
-            $hitungSplitInfo = $splitinfo->total;
-            $kategori = $splitinfo->kategori;
-            foreach ($gainForGainRatio as $gain) :
-                $kategori1 = $gain->kategori;
-                $hitungGain = $gain->gain;
-                if ($kategori == $kategori1) {
-                    $gainRatio = $hitungGain / $hitungSplitInfo;
-                    $this->miningModel->saveGainRatio($kategori, $gainRatio);
-                }
-            endforeach;
-        endforeach;
-
-        //============= End Hitung Gain Ratio ==========
-
-        //============= Membuat Cabang Pohon Keputusan ==========
-        $this->miningModel->clearPemangkasan();
-        // 1. Memilih Nilai Gain Tertinggi => Result = Atribut/Kategori   
-        $topGain = $this->miningModel->getTopGain();
-
-        // 2. Memisah dengan Atribut -> Gejala dan Penyakit
-        foreach ($topGain as $tg) :
-            $kategoriGain = $tg->kategori;
-        endforeach;
-        $viewGain = $this->miningModel->getViewTopGain($kategoriGain);
-        foreach ($viewGain as $vg) :
-            $id_gejala = $vg->id_gejala;
-            $kategori = $vg->kategori;
-            // $gejala = $vg->gejala;
-            $keputusan = $vg->id_penyakit;
-            $entropyAtribut = $this->miningModel->getEntropy($id_gejala);
-
-            // 3. Membuat pohon keputusan pada tabel pohon keputusan
-            foreach ($entropyAtribut as $entropy) :
-                $value = $entropy->entropy;
-                if ($value == 0) {
-                    // $this->miningModel->savePemangkasan($kategori, $gejala);
-                    $parent = $startCabang .  ' ($gejala == ' . $id_gejala . ')';
-                    $this->miningModel->saveDecisionTree(
-                        // $startCabang . ' ($gejala == ' . $id_gejala . ')',
-                        $parent,
-                        $kategori,
-                        $keputusan
-                    );
-
-                    // 4. Menghapus data Node dari data sample
-                    $this->miningModel->deleteMiningSampleGejala($id_gejala);
-                    $this->miningModel->deleteMiningSamplePenyakit($keputusan);
-                } else {
-                    // ($startCabang == " " ? $and = ' &&' : $and = '');
-                    $and = "";
-                    if ($startCabang == " ") {
-                        $and = ' && ';
+            foreach ($jumlahgejala as $jg) :
+                foreach ($jumlahkasuspenyakit as $jkp) :
+                    if ($jkp->id_gejala == $jg->id_gejala) {
+                        $entropyA = (- ($jkp->total / $jg->total) * log(($jkp->total / $jg->total), 2));
+                        $entropyAtr += $entropyA;
                     } else {
-                        $and = "";
+                        $entropyAtr = 0;
                     }
 
-                    $cabang = ' ($gejala == ' . $id_gejala . ')' . $and;
-
-                    // 4. Menghapus data Node dari data sample
-                    // $this->miningModel->deleteMiningSample($id_gejala);
-                    // $this->miningModel->deleteMiningSamplePenyakit($keputusan);
-                    $this->miningModel->deleteMiningSampleGejala($id_gejala);
-                }
-            // var_dump($entropyAtribut);
+                    if ($entropyAtr != 0) {
+                        $idGejala = $jkp->id_gejala;
+                        $this->miningModel->saveEntropy($idGejala, $entropyAtr);
+                    } else {
+                        $idGejala = $jkp->id_gejala;
+                        $this->miningModel->saveEntropy($idGejala, $entropyAtr);
+                    }
+                endforeach;
             endforeach;
-        endforeach;
-        $startCabang .= $cabang;
-        var_dump($startCabang);
+
+            //=============End  Hitung entropy==========
+
+            //=============Hitung Gain ============
+            $entropyGainTotal = $entropytotal;
+            $jumlahKasus = $jumlahkasus;
+            $gain2 = 0;
+            $this->miningModel->clearMiningGain();
+            foreach ($kasus as $k) :
+                $id_gejala = $k->id_gejala;
+                $kategori = $k->kategori;
+                $entropyAtribut = $this->miningModel->getEntropy($id_gejala);
+                foreach ($entropyAtribut as $entropy) :
+                    $kategori2 = $entropy->kategori;
+                    $totalgejalakasus = $k->total;
+                    if ($kategori == $kategori2) {
+                        $ea = $entropy->entropy;
+                        $gain1 = ($totalgejalakasus / $jumlahKasus) * $ea;
+                        $gain2 = $gain1;
+                        $this->miningModel->saveMiningGain($kategori2, $gain2);
+                    } else {
+                        $gain1 = 0;
+                        $gain2 = 0;
+                        $entropyGainTotal = $entropytotal;
+                    }
+                endforeach;
+            endforeach;
 
 
-        // 5. Membuat pengulangan pada Mining 
-        //============= End Membuat Cabang Pohon Keputusan =======
+            $this->miningModel->clearGain();
+            $miningGain = $this->miningModel->getMiningGain();
+            foreach ($miningGain as $m) :
+                $entropyTotal = $entropytotal;
+                $kategori = $m->kategori;
+                $gainMining = $m->gain;
+                $gain = $entropyTotal - $gainMining;
+                $this->miningModel->saveGain($kategori, $gain);
+            endforeach;
 
+
+            //=============End Hitung Gain =========
+
+
+            //=============Hitung Split Info =========
+            $splitinfo = 0;
+            $si = 0;
+            $this->miningModel->clearMiningSplitInfo();
+            foreach ($kasus as $k) :
+                $id_gejala = $k->id_gejala;
+                $kategori = $k->kategori;
+                $totalgejalakasus = $k->total;
+
+                $splitinfo = (- ($totalgejalakasus / $jumlahKasus)) *  log(($totalgejalakasus / $jumlahKasus), 2);
+                $si += $splitinfo;
+                $this->miningModel->saveMiningSplitInfo($kategori, $si);
+
+                $si = 0;
+                $splitinfo = 0;
+
+            endforeach;
+
+
+            // $miningSplitInfo = $this->miningModel->getMiningSplitInfo();
+            // foreach ($miningSplitInfo as $splitinfo) :
+            //     $kategori = $splitinfo->kategori;
+            //     $saveSplitInfo = $splitinfo->splitinfo;
+            //     $this->miningModel->saveSplitInfo($kategori, $saveSplitInfo);
+            // endforeach;
+            //=============End Hitung Split Info ===========
+
+
+            //============= Hitung Gain Ratio =============
+
+            $splitinfoForGainRatio = $this->miningModel->getMiningSplitInfo();
+            $gainForGainRatio = $this->miningModel->getGain();
+            $this->miningModel->clearGainRatio();
+            foreach ($splitinfoForGainRatio as $splitinfo) :
+                $hitungSplitInfo = $splitinfo->total;
+                $kategori = $splitinfo->kategori;
+                foreach ($gainForGainRatio as $gain) :
+                    $kategori1 = $gain->kategori;
+                    $hitungGain = $gain->gain;
+                    if ($kategori == $kategori1) {
+                        $gainRatio = $hitungGain / $hitungSplitInfo;
+                        $this->miningModel->saveGainRatio($kategori, $gainRatio);
+                    }
+                endforeach;
+            endforeach;
+
+            //============= End Hitung Gain Ratio ==========
+
+            //============= Membuat Cabang Pohon Keputusan ==========
+            $this->miningModel->clearPemangkasan();
+            // 1. Memilih Nilai Gain Tertinggi => Result = Atribut/Kategori   
+            $topGain = $this->miningModel->getTopGain();
+
+            // 2. Memisah dengan Atribut -> Gejala dan Penyakit
+            foreach ($topGain as $tg) :
+                $kategoriGain = $tg->kategori;
+            endforeach;
+            $viewGain = $this->miningModel->getViewTopGain($kategoriGain);
+            foreach ($viewGain as $vg) :
+                $id_gejala = $vg->id_gejala;
+                $kategori = $vg->kategori;
+                // $gejala = $vg->gejala;
+                $keputusan = $vg->id_penyakit;
+                $entropyAtribut = $this->miningModel->getEntropy($id_gejala);
+
+                // 3. Membuat pohon keputusan pada tabel pohon keputusan
+                foreach ($entropyAtribut as $entropy) :
+                    $value = $entropy->entropy;
+                    if ($value == 0) {
+                        // $this->miningModel->savePemangkasan($kategori, $gejala);
+                        $parent = $startCabang .  ' ($gejala == ' . $id_gejala . ')';
+                        $this->miningModel->saveDecisionTree(
+                            // $startCabang . ' ($gejala == ' . $id_gejala . ')',
+                            $parent,
+                            $kategori,
+                            $keputusan
+                        );
+
+                        // 4. Menghapus data Node dari data sample
+                        $this->miningModel->deleteMiningSampleGejala($id_gejala);
+                        $this->miningModel->deleteMiningSamplePenyakit($keputusan);
+                    } else {
+
+                        $and = " ";
+                        if ($startCabang == " ") {
+                            $and = " && ";
+                        } else {
+                            $and = " && ";
+                        }
+
+                        $cabang = ' ($gejala == ' . $id_gejala . ')' . $and;
+
+                        // 4. Menghapus data Node dari data sample
+                        // $this->miningModel->deleteMiningSample($id_gejala);
+                        // $this->miningModel->deleteMiningSamplePenyakit($keputusan);
+                        $this->miningModel->deleteMiningSampleGejala($id_gejala);
+                    }
+                // var_dump($entropyAtribut);
+                endforeach;
+            endforeach;
+            $startCabang .= $cabang;
+            var_dump($startCabang);
+
+
+            // 5. Membuat pengulangan pada Mining 
+            //============= End Membuat Cabang Pohon Keputusan =======
+            $i--;
+        } //akhir dari pengulangan while
+        // var_dump($i);
 
 
         //penyiapan data yang akan dikirimkan ke page mining
-        $data = [
-            'title' => 'Data Mining',
-            'atribut' => $atribut,
-            'jumlahkasus' => $jumlahkasus,
-            'kasus' => $kasus,
-            'jumlahpenyakit' => $jumlahpenyakit,
-            'jumlahkasuspenyakit' => $jumlahkasuspenyakit,
-            'jumlahgejala' => $jumlahgejala,
-            'entropytotal' => $entropytotal,
+        // $data = [
+        //     'title' => 'Data Mining',
+        //     'atribut' => $atribut,
+        //     'jumlahkasus' => $jumlahkasus,
+        //     'kasus' => $kasus,
+        //     'jumlahpenyakit' => $jumlahpenyakit,
+        //     'jumlahkasuspenyakit' => $jumlahkasuspenyakit,
+        //     'jumlahgejala' => $jumlahgejala,
+        //     'entropytotal' => $entropytotal,
 
-        ];
+        // ];
 
-        //mengembalikan nilai he laporan
-        return view('admin/lapormining', $data);
+        // //mengembalikan nilai he laporan
+        // return view('admin/lapormining', $data);
+
+        return redirect()->to('/admin/decisiontree');
     }
 
-    public function hitungGain()
+    public function kosong()
     {
+        $this->miningModel->clearDecisionTree();
+        $this->miningModel->clearMiningSample();
+        $this->miningModel->startMiningSample();
     }
 }
