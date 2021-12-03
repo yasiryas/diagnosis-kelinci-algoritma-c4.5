@@ -41,4 +41,17 @@ class decisionTreeModel extends Model
         $query = $this->builder->get();
         return $query;
     }
+
+    public function saveResult($id_user, $id_penyakit, $penyakit)
+    {
+        $query = "INSERT INTO `hasil` (`id_hasil`, `id_user`, `id_penyakit`, `penyakit`) VALUES (NULL, '$id_user','$id_penyakit', '$penyakit')";
+        $this->db->query($query);
+    }
+
+    public function countTree()
+    {
+        $query = $this->db->query("SELECT * FROM `decision_tree`");
+        $sql = $query->getNumRows();
+        return $sql;
+    }
 }

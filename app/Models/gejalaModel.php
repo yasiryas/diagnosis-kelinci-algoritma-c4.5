@@ -29,4 +29,14 @@ class gejalaModel extends Model
 
         return $builder;
     }
+
+    public function getView()
+    {
+        $builder = $this->table('data_gejala');
+        $builder->select('id_gejala, kategori, gejala');
+        $builder->orderBy('kategori');
+        $query = $this->builder->get();
+
+        return $query;
+    }
 }

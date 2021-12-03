@@ -19,6 +19,7 @@
     <link href="<?= base_url(); ?>/css/sb-admin-2.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
     </script>
+    
 </head>
 
 <body id="page-top">
@@ -750,6 +751,11 @@
         });
     </script>
     <!-- End Modal Delete Sample -->
+
+    <!-- Modal diagnosis -->
+    <?= $this->include('templates/modal'); ?>
+
+
 
     <!-- Bootstrap core JavaScript-->
     <script src="<?= base_url(); ?>/vendor/jquery/jquery.min.js"></script>

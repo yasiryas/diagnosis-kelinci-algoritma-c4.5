@@ -29,4 +29,18 @@ class penyakitModel extends Model
 
         return $builder;
     }
+
+    public function hasil($id)
+    {
+        // $builder = $this->table('data_penyakit');
+        // $builder->select('id_penyakit', 'penyakit', 'obat', 'solusi');
+        // $builder->where('id_penyakit', 4);
+        // $query = $this->builder->get();
+
+        $sql = $this->db->query("SELECT * FROM `data_penyakit` WHERE id_penyakit = $id");
+        // $this->db->query($sql);
+        $query = $sql->getRow();
+
+        return $query;
+    }
 }

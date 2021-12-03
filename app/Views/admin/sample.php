@@ -15,14 +15,21 @@
             <div class="row justify-content-between">
                 <div class="col-6">
                     <div class="form-group mb-3">
-                        <button class="btn btn-primary btn-tambah-sample" data-toggle="modal">
-                            Tambah
-                        </button>
-                        <!-- mining/hitung  -->
-                        <a href="<?= base_url('mining/mining'); ?>" class="btn btn-outline-primary"> 
-                            Start Mining
-                        </a>
-
+                        <div class="mining">
+                            <button class="btn btn-primary btn-tambah-sample" data-toggle="modal">
+                                Tambah
+                            </button>
+                            <!-- mining/hitung  -->
+                            <a href="<?= base_url('mining/mining'); ?>" class="btn btn-outline-primary" id="getMining" onclick="enableSpan()">
+                                <span class="spinner-border spinner-border-sm" role="status" id="loading" style="display: none;"></span>
+                                Start Mining
+                            </a>
+                            <script>
+                                function enableSpan() {
+                                    document.getElementById("loading").style.display = "";
+                                }
+                            </script>
+                        </div>
                     </div>
                 </div>
                 <div class="col">
@@ -78,5 +85,14 @@
         </div>
     </div>
 </div>
+
+<!-- <script>
+    var delay = 1000;
+    $(window).load(function() {
+        setTimeout(function() {
+            $(".mining").hide();
+        }, delay);
+    });
+</script> -->
 
 <?= $this->endSection(); ?>

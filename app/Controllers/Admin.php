@@ -322,7 +322,7 @@ class admin extends BaseController
 
         $data = [
             'title' => 'Decision Tree',
-            'decisiontree' => $decisiontree->select('decision_tree.parent, decision_tree.akar, decision_tree.keputusan, data_penyakit.penyakit')
+            'decisiontree' => $decisiontree->select('decision_tree.detail, decision_tree.akar, decision_tree.keputusan, data_penyakit.penyakit')
                 ->join('data_penyakit', 'data_penyakit.id_penyakit = decision_tree.keputusan')->paginate($page, 'decision_tree'),
             'pager' => $this->decisionTreeModel->pager,
             'currentPage' => $currentPage,

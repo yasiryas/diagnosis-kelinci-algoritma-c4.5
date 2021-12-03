@@ -70,7 +70,7 @@
          <li class="nav-item <?= ($title == 'Diagnosis') ? 'active' : ''; ?>">
              <a class="nav-link" href="<?= base_url('user/diagnosis'); ?>">
                  <i class="fas fa-stethoscope"></i>
-                 <span>Diagnosis</span></a>
+                 <span>Consultation</span></a>
          </li>
 
 

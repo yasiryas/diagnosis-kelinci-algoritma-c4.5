@@ -42,7 +42,7 @@
                 <thead>
                     <tr>
                         <th scope="col">No.</th>
-                        <th scope="col">Parent</th>
+                        <th scope="col">Gejala</th>
                         <th scope="col">Akar</th>
                         <th scope="col">Keputusan</th>
                     </tr>
@@ -53,7 +53,7 @@
                     foreach ($decisiontree as $dt) : ?>
                         <tr>
                             <th scope="row"><?= $i++; ?></th>
-                            <td><?= $dt['parent']; ?></td>
+                            <td><?= $dt['detail']; ?></td>
                             <td><?= $dt['akar']; ?></td>
                             <td><?= $dt['penyakit']; ?> </td>
                         </tr>

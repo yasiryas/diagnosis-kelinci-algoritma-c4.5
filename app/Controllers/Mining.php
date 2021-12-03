@@ -61,13 +61,14 @@ class mining extends BaseController
         //Kosongkan Pohon Keputusan dan Sample
         $this->miningModel->clearDecisionTree();
         $this->miningModel->clearMiningSample();
-        
+
         //Start mining transfer data data_sample to mining_sample
         $this->miningModel->startMiningSample();
-        
+
         //penyiapan variabel untuk bahan mining
         $jumlahkasus = 0;
-        $startCabang = " ";
+        $startCabang = "";
+        $startDetail = "";
         $atribut = $this->miningModel->getJumlahAtribut();
 
 
@@ -76,6 +77,7 @@ class mining extends BaseController
 
         //Start Perulangan (while)
         $i = $atribut->atribut;
+        $j = 1;
         while ($i > 0) {
 
             //isi variabel
@@ -249,7 +251,7 @@ class mining extends BaseController
             foreach ($viewGain as $vg) :
                 $id_gejala = $vg->id_gejala;
                 $kategori = $vg->kategori;
-                // $gejala = $vg->gejala;
+                $gejala = $vg->gejala;
                 $keputusan = $vg->id_penyakit;
                 $entropyAtribut = $this->miningModel->getEntropy($id_gejala);
 
@@ -257,11 +259,25 @@ class mining extends BaseController
                 foreach ($entropyAtribut as $entropy) :
                     $value = $entropy->entropy;
                     if ($value == 0) {
-                        // $this->miningModel->savePemangkasan($kategori, $gejala);
-                        $parent = $startCabang .  ' ($gejala == ' . $id_gejala . ')';
+
+                        if ($startCabang == "") {
+                            $plus = "";
+                        } else {
+                            $plus = " ";
+                        }
+                        $parent = $startCabang . $plus . $id_gejala;
+
+                        if ($startDetail == "") {
+                            $and = "";
+                        } else {
+                            $and = " dan ";
+                        }
+                        $detail = $startDetail . $and . $kategori . ' ' . $gejala;
+
                         $this->miningModel->saveDecisionTree(
-                            // $startCabang . ' ($gejala == ' . $id_gejala . ')',
+
                             $parent,
+                            $detail,
                             $kategori,
                             $keputusan
                         );
@@ -271,14 +287,33 @@ class mining extends BaseController
                         $this->miningModel->deleteMiningSamplePenyakit($keputusan);
                     } else {
 
-                        $and = " ";
-                        if ($startCabang == " ") {
-                            $and = " && ";
+                        // $and = " ";
+                        // if ($startCabang == " ") {
+                        //     $and = " ";
+                        // } else {
+                        //     $and = " ";
+                        // }
+
+                        // $cabang = ' ($gejala' . $j . ' == ' . $id_gejala . ')' . $and;
+
+                        $plus = " ";
+                        if ($startCabang == "") {
+                            $plus = "";
                         } else {
-                            $and = " && ";
+                            $plus = " ";
                         }
 
-                        $cabang = ' ($gejala == ' . $id_gejala . ')' . $and;
+                        $cabang = $plus . $id_gejala;
+
+                        $and = " ";
+                        if (
+                            $startDetail == ""
+                        ) {
+                            $and = "";
+                        } else {
+                            $and = " dan ";
+                        }
+                        $detailCabang = $and . $kategori . ' ' . $gejala;
 
                         // 4. Menghapus data Node dari data sample
                         // $this->miningModel->deleteMiningSample($id_gejala);
@@ -289,11 +324,13 @@ class mining extends BaseController
                 endforeach;
             endforeach;
             $startCabang .= $cabang;
-            var_dump($startCabang);
+            $startDetail .= $detailCabang;
+
 
 
             // 5. Membuat pengulangan pada Mining 
             //============= End Membuat Cabang Pohon Keputusan =======
+            $j++;
             $i--;
         } //akhir dari pengulangan while
         // var_dump($i);

@@ -3,6 +3,10 @@
 namespace App\Controllers;
 
 use Myth\Auth\Models\UserModel;
+use App\Models\gejalaModel;
+use App\Models\decisionTreeModel;
+use App\Models\penyakitModel;
+
 
 class User extends BaseController
 {
@@ -18,6 +22,9 @@ class User extends BaseController
     {
         $this->db      = \Config\Database::connect();
         $this->builder = $this->db->table('users');
+        $this->gejalaModel = new gejalaModel();
+        $this->decisionTreeModel = new decisionTreeModel();
+        $this->penyakitModel = new penyakitModel();
     }
 
     public function index()
@@ -148,5 +155,63 @@ class User extends BaseController
         ])) {
             return redirect()->to('/user/changepassword/')->withInput();
         }
+    }
+
+    public function prosesDiagnosis()
+    {
+        $gejala = $this->gejalaModel->orderBy('kategori')->findAll();
+
+        $data = [
+            'title' => 'Diagnosis',
+            'gejala' => $gejala,
+        ];
+
+        return view('/user/prosesdiagnosis', $data);
+    }
+
+    public function konsultasi()
+    {
+        $countTree = $this->decisionTreeModel->countTree();
+        $count = 0;
+        $gejala = $this->request->getVar('gejala');
+        if ($gejala == null) {
+            session()->setFlashdata('diagnosis', 'Harus memilih gejala minimal 1');
+            return redirect()->to('/user/prosesdiagnosis');
+        }
+
+        $rule = $this->decisionTreeModel->findAll();
+        foreach ($rule as $r) :
+            $parent = $r['parent'];
+            $ruleSet = explode(" ", $parent);
+
+            if ($gejala == $ruleSet) {
+                $detail = $r['detail'];
+                $penyakit = $r['keputusan'];
+                $id = (int) $penyakit;
+                $id_user = user()->id;
+                $hasil = $this->penyakitModel->hasil($id);
+                $penyakit = $hasil->penyakit;
+                $this->decisionTreeModel->saveResult($id_user, $id, $penyakit);
+            } else {
+                $count++;
+            }
+        endforeach;
+
+        // count gejala
+        if ($countTree == $count) {
+            session()->setFlashdata('diagnosis', 'Gejala masih belum sesuai, harap pilih gejala yang sesuai!');
+            return redirect()->to('/user/prosesdiagnosis');
+        }
+
+
+        // $hasil = $this->penyakitModel->hasil($id);
+        $data = [
+            'title' => 'Diagnosis',
+            // 'hasil' => $this->penyakitModel->hasil($id),
+            'hasil' => $hasil,
+            'gejala' => $detail,
+        ];
+
+        return view('/user/hasildiagnosis', $data);
     }
 }

@@ -334,9 +334,9 @@ class miningModel extends Model
     }
 
     //insert decision tree
-    public function saveDecisionTree($parent, $akar, $keputusan)
+    public function saveDecisionTree($parent, $detail, $akar, $keputusan)
     {
-        $sql = "INSERT INTO `decision_tree` (`id`, `parent`, `akar`, `keputusan`) VALUES (NULL, '$parent', '$akar','$keputusan')";
+        $sql = "INSERT INTO `decision_tree` (`id`, `parent`, `detail`, `akar`, `keputusan`) VALUES (NULL, '$parent', '$detail', '$akar','$keputusan')";
         $this->db->query($sql);
     }
 
