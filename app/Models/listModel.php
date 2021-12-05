@@ -24,4 +24,25 @@ class listModel extends Model
 
         return $builder;
     }
+
+    public function countAllHasil()
+    {
+        $query = $this->db->query("SELECT * FROM `hasil`");
+        $sql = $query->getNumRows();
+        return $sql;
+    }
+
+    public function countHasil($id)
+    {
+        $query = $this->db->query("SELECT * FROM `hasil` WHERE id_user = $id");
+        $sql = $query->getNumRows();
+        return $sql;
+    }
+
+    public function checkUser($id)
+    {
+        $query = $this->db->query("SELECT users.id as userid, username, email, name FROM users JOIN auth_groups_users ON auth_groups_users.user_id = users.id JOIN auth_groups ON auth_groups.id = auth_groups_users.group_id where auth_groups_users.user_id = $id");
+        $result = $query->getRow();
+        return $result;
+    }
 }

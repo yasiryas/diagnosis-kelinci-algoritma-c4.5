@@ -43,4 +43,11 @@ class penyakitModel extends Model
 
         return $query;
     }
+
+    public function countPenyakit()
+    {
+        $query = $this->db->query("SELECT * FROM `data_penyakit`");
+        $sql = $query->getNumRows();
+        return $sql;
+    }
 }

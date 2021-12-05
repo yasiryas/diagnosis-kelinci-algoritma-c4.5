@@ -77,7 +77,6 @@ class mining extends BaseController
 
         //Start Perulangan (while)
         $i = $atribut->atribut;
-        $j = 1;
         while ($i > 0) {
 
             //isi variabel
@@ -262,16 +261,24 @@ class mining extends BaseController
 
                         if ($startCabang == "") {
                             $plus = "";
+                        } else if ($startCabang == $id_gejala) {
+                            $startCabang = "";
+                            $startDetail = "";
                         } else {
                             $plus = " ";
                         }
                         $parent = $startCabang . $plus . $id_gejala;
 
+                        $cekDetail = $kategori . ' ' . $gejala;
                         if ($startDetail == "") {
                             $and = "";
+                        } else if ($startDetail == $cekDetail) {
+                            $startDetail = "";
                         } else {
                             $and = " dan ";
                         }
+
+
                         $detail = $startDetail . $and . $kategori . ' ' . $gejala;
 
                         $this->miningModel->saveDecisionTree(
@@ -287,15 +294,6 @@ class mining extends BaseController
                         $this->miningModel->deleteMiningSamplePenyakit($keputusan);
                     } else {
 
-                        // $and = " ";
-                        // if ($startCabang == " ") {
-                        //     $and = " ";
-                        // } else {
-                        //     $and = " ";
-                        // }
-
-                        // $cabang = ' ($gejala' . $j . ' == ' . $id_gejala . ')' . $and;
-
                         $plus = " ";
                         if ($startCabang == "") {
                             $plus = "";
@@ -304,6 +302,11 @@ class mining extends BaseController
                         }
 
                         $cabang = $plus . $id_gejala;
+
+                        //detail cabang erorr
+                        //$detail = $kategori . ' ' . $gejala;
+
+
 
                         $and = " ";
                         if (
@@ -323,6 +326,10 @@ class mining extends BaseController
                 // var_dump($entropyAtribut);
                 endforeach;
             endforeach;
+            if ($startCabang == $cabang) {
+                $detailCabang = "";
+                $startCabang = "";
+            }
             $startCabang .= $cabang;
             $startDetail .= $detailCabang;
 
@@ -330,7 +337,7 @@ class mining extends BaseController
 
             // 5. Membuat pengulangan pada Mining 
             //============= End Membuat Cabang Pohon Keputusan =======
-            $j++;
+
             $i--;
         } //akhir dari pengulangan while
         // var_dump($i);

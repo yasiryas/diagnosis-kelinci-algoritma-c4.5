@@ -6,6 +6,7 @@ use Myth\Auth\Models\UserModel;
 use App\Models\gejalaModel;
 use App\Models\decisionTreeModel;
 use App\Models\penyakitModel;
+use App\Models\listModel;
 
 
 class User extends BaseController
@@ -25,11 +26,37 @@ class User extends BaseController
         $this->gejalaModel = new gejalaModel();
         $this->decisionTreeModel = new decisionTreeModel();
         $this->penyakitModel = new penyakitModel();
+        $this->userModel = new UserModel();
+        $this->listModel = new listModel();
     }
 
     public function index()
     {
-        $data['title'] = 'Dashboard';
+        //Jumlah User Terdaftar
+        $countUser = $this->userModel->countUser();
+
+        //Total gejala yang terdaftar
+        $countGejala = $this->gejalaModel->countGejala();
+
+        //Total penyakit yang terdaftar
+        $countPenyakit = $this->penyakitModel->countPenyakit();
+
+        //Jumlah record konsultasi (Admin: All - User: idUser)
+        $id_user = user()->id;
+        $user = $this->listModel->checkUser($id_user);
+        if ($user->name == "admin") {
+            $countAllHasil = $this->listModel->countAllHasil();
+        } else {
+            $countAllHasil = $this->listModel->countHasil($id_user);
+        }
+
+        $data = [
+            'title' => 'Dashboard',
+            'user' => $countUser,
+            'gejala' => $countGejala,
+            'penyakit' => $countPenyakit,
+            'hasil' => $countAllHasil,
+        ];
         return view('user/index', $data);
     }
 

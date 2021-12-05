@@ -130,4 +130,11 @@ class UserModel extends Model
 
         $data['users'] = $query->getResult();
     }
+
+    public function countUser()
+    {
+        $query = $this->db->query("SELECT * FROM `users` WHERE active = 1");
+        $sql = $query->getNumRows();
+        return $sql;
+    }
 }

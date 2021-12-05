@@ -6,6 +6,7 @@ use App\Models\listModel;
 use App\Models\gejalaModel;
 use App\Models\penyakitModel;
 use App\Models\sampleModel;
+use App\Models\miningModel;
 use App\Models\decisionTreeModel;
 
 
@@ -28,6 +29,7 @@ class admin extends BaseController
         $this->gejalaModel = new gejalaModel();
         $this->penyakitModel = new penyakitModel();
         $this->sampleModel = new sampleModel();
+        $this->miningModel = new miningModel();
         $this->decisionTreeModel = new decisionTreeModel();
     }
 
@@ -136,6 +138,7 @@ class admin extends BaseController
 
     public function deleteGejala()
     {
+        $this->sampleModel->where('id_gejala', [$this->request->getVar('id_gejala')])->delete();
         $this->gejalaModel->where('id_gejala', [$this->request->getVar('id_gejala')])->delete();
 
         session()->setFlashdata('pesan', 'Gejala berhasil dihapus');
@@ -209,6 +212,10 @@ class admin extends BaseController
 
     public function deletePenyakit()
     {
+
+        $this->miningModel->clearMiningEntropy();
+        $this->decisionTreeModel->where('keputusan', [$this->request->getVar('id_penyakit')])->delete();
+        $this->sampleModel->where('id_penyakit', [$this->request->getVar('id_penyakit')])->delete();
         $this->penyakitModel->where('id_penyakit', [$this->request->getVar('id_penyakit')])->delete();
 
         session()->setFlashdata('pesan', 'Penyakit berhasil dihapus');

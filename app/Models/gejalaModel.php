@@ -39,4 +39,11 @@ class gejalaModel extends Model
 
         return $query;
     }
+
+    public function countGejala()
+    {
+        $query = $this->db->query("SELECT * FROM `data_gejala`");
+        $sql = $query->getNumRows();
+        return $sql;
+    }
 }
