@@ -303,10 +303,6 @@ class mining extends BaseController
 
                         $cabang = $plus . $id_gejala;
 
-                        //detail cabang erorr
-                        //$detail = $kategori . ' ' . $gejala;
-
-
 
                         $and = " ";
                         if (
@@ -337,27 +333,9 @@ class mining extends BaseController
 
             // 5. Membuat pengulangan pada Mining 
             //============= End Membuat Cabang Pohon Keputusan =======
-
             $i--;
         } //akhir dari pengulangan while
-        // var_dump($i);
 
-
-        //penyiapan data yang akan dikirimkan ke page mining
-        // $data = [
-        //     'title' => 'Data Mining',
-        //     'atribut' => $atribut,
-        //     'jumlahkasus' => $jumlahkasus,
-        //     'kasus' => $kasus,
-        //     'jumlahpenyakit' => $jumlahpenyakit,
-        //     'jumlahkasuspenyakit' => $jumlahkasuspenyakit,
-        //     'jumlahgejala' => $jumlahgejala,
-        //     'entropytotal' => $entropytotal,
-
-        // ];
-
-        // //mengembalikan nilai he laporan
-        // return view('admin/lapormining', $data);
 
         return redirect()->to('/admin/decisiontree');
     }

@@ -133,7 +133,8 @@ class UserModel extends Model
 
     public function countUser()
     {
-        $query = $this->db->query("SELECT * FROM `users` WHERE active = 1");
+        // $query = $this->db->query("SELECT * FROM `users` WHERE active = 1");
+        $query = $this->db->query("SELECT * FROM `users`");
         $sql = $query->getNumRows();
         return $sql;
     }

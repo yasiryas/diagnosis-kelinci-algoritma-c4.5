@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 22, 2021 at 05:21 PM
+-- Generation Time: Dec 05, 2021 at 03:04 PM
 -- Server version: 10.4.17-MariaDB
 -- PHP Version: 8.0.1
 
@@ -42,7 +42,8 @@ CREATE TABLE `auth_activation_attempts` (
 INSERT INTO `auth_activation_attempts` (`id`, `ip_address`, `user_agent`, `token`, `created_at`) VALUES
 (1, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36 Edg/89.0.774.63', 'a8f9ad52965795457f8640396d524adf', '2021-03-26 06:59:44'),
 (2, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36 Edg/89.0.774.63', '4e4c048a5e5583b4d64be8d8d78bc92e', '2021-03-26 08:50:13'),
-(3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36 Edg/91.0.864.59', 'b532bb0125fbac9e6e36e5342861f751', '2021-06-28 09:56:14');
+(3, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36 Edg/91.0.864.59', 'b532bb0125fbac9e6e36e5342861f751', '2021-06-28 09:56:14'),
+(4, '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.55 Safari/537.36 Edg/96.0.1054.41', 'e09ee2d469d85ffb6e6209bd8fb2cbc1', '2021-12-04 21:59:19');
 
 -- --------------------------------------------------------
 
@@ -103,11 +104,7 @@ INSERT INTO `auth_groups_users` (`group_id`, `user_id`) VALUES
 (1, 4),
 (2, 3),
 (2, 9),
-(2, 10),
-(2, 12),
-(2, 13),
-(2, 14),
-(2, 15);
+(2, 17);
 
 -- --------------------------------------------------------
 
@@ -331,7 +328,87 @@ INSERT INTO `auth_logins` (`id`, `ip_address`, `email`, `user_id`, `date`, `succ
 (200, '::1', 'localmenoreh@gmail.com', 3, '2021-09-22 08:23:16', 1),
 (201, '::1', 'yasir123983@gmail.com', 4, '2021-09-22 08:24:33', 1),
 (202, '::1', 'yasir123983@gmail.com', 4, '2021-09-22 08:26:22', 1),
-(203, '::1', 'yasir123983@gmail.com', 4, '2021-09-22 08:31:55', 1);
+(203, '::1', 'yasir123983@gmail.com', 4, '2021-09-22 08:31:55', 1),
+(204, '::1', 'yasir123983@gmail.com', 4, '2021-09-22 23:36:47', 1),
+(205, '::1', 'yasir123983@gmail.com', 4, '2021-09-23 07:47:29', 1),
+(206, '::1', 'yasir123983@gmail.com', 4, '2021-09-23 21:55:39', 1),
+(207, '::1', 'yasir123983@gmail.com', 4, '2021-09-24 06:31:01', 1),
+(208, '::1', 'yasir123983@gmail.com', 4, '2021-09-26 09:23:01', 1),
+(209, '::1', 'yasir123983@gmail.com', 4, '2021-09-26 17:19:54', 1),
+(210, '::1', 'yasir123983@gmail.com', 4, '2021-09-26 21:03:25', 1),
+(211, '::1', 'yasir123983@gmail.com', 4, '2021-09-27 09:27:40', 1),
+(212, '::1', 'yasir123983@gmail.com', 4, '2021-09-27 21:41:34', 1),
+(213, '::1', 'yasir123983@gmail.com', 4, '2021-09-29 20:27:33', 1),
+(214, '::1', 'yasir123983@gmail.com', 4, '2021-10-04 19:34:16', 1),
+(215, '::1', 'yasir123983@gmail.com', 4, '2021-10-04 22:15:22', 1),
+(216, '::1', 'yasir123983@gmail.com', 4, '2021-10-06 09:15:09', 1),
+(217, '::1', 'yasir123983@gmail.com', 4, '2021-10-07 11:41:51', 1),
+(218, '::1', 'yasir123983@gmail.com', 4, '2021-10-09 00:41:45', 1),
+(219, '::1', 'yasir123983@gmail.com', 4, '2021-10-09 03:26:57', 1),
+(220, '::1', 'yasir123983@gmail.com', 4, '2021-10-12 08:21:47', 1),
+(221, '::1', 'yasir123983@gmail.com', 4, '2021-10-12 11:29:28', 1),
+(222, '::1', 'yasir123983@gmail.com', 4, '2021-10-19 08:52:17', 1),
+(223, '::1', 'yasir123983@gmail.com', 4, '2021-10-24 22:27:25', 1),
+(224, '::1', 'yasir123983@gmail.com', 4, '2021-10-26 09:46:05', 1),
+(225, '::1', 'yasir123983@gmail.com', 4, '2021-10-27 20:26:56', 1),
+(226, '::1', 'yasir123983@gmail.com', 4, '2021-10-28 21:30:29', 1),
+(227, '::1', 'yasir123983@gmail.com', 4, '2021-10-31 11:12:11', 1),
+(228, '::1', 'yasir123983@gmail.com', 4, '2021-11-01 08:53:48', 1),
+(229, '::1', 'yasir123983@gmail.com', 4, '2021-11-02 08:05:09', 1),
+(230, '::1', 'yasir123983@gmail.com', 4, '2021-11-02 08:05:12', 1),
+(231, '::1', 'yasir123983@gmail.com', 4, '2021-11-02 08:22:14', 1),
+(232, '::1', 'yasir123983@gmail.com', 4, '2021-11-06 21:36:47', 1),
+(233, '::1', 'yasir123983@gmail.com', 4, '2021-11-07 16:06:17', 1),
+(234, '::1', 'yasir123983@gmail.com', 4, '2021-11-08 08:01:02', 1),
+(235, '::1', 'yasir123983@gmail.com', 4, '2021-11-08 08:02:39', 1),
+(236, '::1', 'yasir123983@gmail.com', 4, '2021-11-11 07:54:09', 1),
+(237, '::1', 'localmenoreh@gmail.com', 3, '2021-11-11 09:07:10', 1),
+(238, '::1', 'yasir123983@gmail.com', 4, '2021-11-14 08:34:52', 1),
+(239, '::1', 'localmenoreh@gmail.com', 3, '2021-11-15 08:37:11', 1),
+(240, '::1', 'yasir123983@gmail.com', 4, '2021-11-15 08:38:01', 1),
+(241, '::1', 'localmenoreh@gmail.com', 3, '2021-11-15 19:57:44', 1),
+(242, '::1', 'yasir123983@gmail.com', 4, '2021-11-15 20:08:39', 1),
+(243, '::1', 'localmenoreh@gmail.com', 3, '2021-11-17 19:48:39', 1),
+(244, '::1', 'localmenoreh@gmail.com', 3, '2021-11-18 06:30:09', 1),
+(245, '::1', 'yasir123983@gmail.com', 4, '2021-11-18 06:30:36', 1),
+(246, '::1', 'localmenoreh@gmail.com', 3, '2021-11-18 08:39:07', 1),
+(247, '::1', 'yasir123983@gmail.com', 4, '2021-11-18 19:52:30', 1),
+(248, '::1', 'localmenoreh@gmail.com', 3, '2021-11-18 20:50:26', 1),
+(249, '::1', 'yasir123983@gmail.com', 4, '2021-11-21 19:15:25', 1),
+(250, '::1', 'localmenoreh@gmail.com', 3, '2021-11-21 19:32:38', 1),
+(251, '::1', 'yasir123983@gmail.com', 4, '2021-11-22 21:00:35', 1),
+(252, '::1', 'yasir123983@gmail.com', 4, '2021-11-22 21:00:39', 1),
+(253, '::1', 'localmenoreh@gmail.com', 3, '2021-11-22 21:08:21', 1),
+(254, '::1', 'localmenoreh@gmail.com', 3, '2021-11-23 19:45:53', 1),
+(255, '::1', 'yasir123983@gmail.com', 4, '2021-11-23 19:48:53', 1),
+(256, '::1', 'yasir123983@gmail.com', 4, '2021-11-24 20:32:52', 1),
+(257, '::1', 'localmenoreh@gmail.com', 3, '2021-11-24 20:33:30', 1),
+(258, '::1', 'localmenoreh@gmail.com', 3, '2021-11-25 19:36:06', 1),
+(259, '::1', 'localmenoreh@gmail.com', 3, '2021-11-27 15:47:09', 1),
+(260, '::1', 'localmenoreh@gmail.com', 3, '2021-11-28 16:48:26', 1),
+(261, '::1', 'localmenoreh@gmail.com', 3, '2021-11-28 21:01:44', 1),
+(262, '::1', 'localmenoreh@gmail.com', 3, '2021-11-29 20:11:00', 1),
+(263, '::1', 'localmenoreh@gmail.com', 3, '2021-11-30 05:48:29', 1),
+(264, '::1', 'yasir123983@gmail.com', 4, '2021-11-30 07:09:00', 1),
+(265, '::1', 'localmenoreh@gmail.com', 3, '2021-11-30 19:26:41', 1),
+(266, '::1', 'yasir123983@gmail.com', 4, '2021-11-30 19:27:32', 1),
+(267, '::1', 'localmenoreh@gmail.com', 3, '2021-12-01 19:06:23', 1),
+(268, '::1', 'yasir123983@gmail.com', 4, '2021-12-01 19:27:48', 1),
+(269, '::1', 'localmenoreh@gmail.com', 3, '2021-12-02 05:43:27', 1),
+(270, '::1', 'yasir123983@gmail.com', 4, '2021-12-02 07:09:39', 1),
+(271, '::1', 'yasir123983@gmail.com', 4, '2021-12-02 19:06:28', 1),
+(272, '::1', 'localmenoreh@gmail.com', 3, '2021-12-02 19:34:20', 1),
+(273, '::1', 'yasir123983@gmail.com', 4, '2021-12-02 19:50:51', 1),
+(274, '::1', 'yasir123983@gmail.com', 4, '2021-12-03 09:01:32', 1),
+(275, '::1', 'localmenoreh@gmail.com', 3, '2021-12-03 09:05:33', 1),
+(276, '::1', 'yasir123983@gmail.com', 4, '2021-12-04 04:05:58', 1),
+(277, '::1', 'yasir123983@gmail.com', 4, '2021-12-04 04:06:12', 1),
+(278, '::1', 'localmenoreh@gmail.com', 3, '2021-12-04 06:52:39', 1),
+(279, '::1', 'yasir123983@gmail.com', 4, '2021-12-04 19:31:51', 1),
+(280, '::1', 'localmenoreh@gmail.com', 3, '2021-12-04 21:25:53', 1),
+(281, '::1', 'yasiryasdks@gmail.com', NULL, '2021-12-04 21:47:20', 0),
+(282, '::1', 'yasiryasdks@gmail.com', 16, '2021-12-04 21:55:57', 0),
+(283, '::1', 'yasiryasdks@gmail.com', 17, '2021-12-04 21:59:26', 1);
 
 -- --------------------------------------------------------
 
@@ -439,7 +516,9 @@ INSERT INTO `auth_reset_attempts` (`id`, `email`, `ip_address`, `user_agent`, `t
 (64, 'localmenoreh@gmail.com', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36 Edg/91.0.864.59', '2ae8ba393ba72bd3fae13a9d3087e15c', '2021-06-28 09:57:58'),
 (65, 'localmenoreh@gmail.com', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36 Edg/91.0.864.59', '2ae8ba393ba72bd3fae13a9d3087e15c', '2021-06-28 09:58:11'),
 (66, 'localmenoreh@gmail.com', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36 Edg/91.0.864.59', 'fda0dd6f992b6d6833965e480a9518cc', '2021-06-29 22:28:04'),
-(67, 'localmenoreh@gmail.com', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36', 'e4ab5ff13ac5afbe33bcde431c129443', '2021-09-22 08:14:35');
+(67, 'localmenoreh@gmail.com', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36', 'e4ab5ff13ac5afbe33bcde431c129443', '2021-09-22 08:14:35'),
+(68, 'localmenoreh@gmail.com', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.55 Safari/537.36 Edg/96.0.1054.41', 'd88901b777b0579023ca07568c53c42c', '2021-12-04 21:55:17'),
+(69, 'yasiryasdks@gmail.com', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.55 Safari/537.36 Edg/96.0.1054.41', 'd88901b777b0579023ca07568c53c42c', '2021-12-04 21:55:42');
 
 -- --------------------------------------------------------
 
@@ -483,7 +562,6 @@ CREATE TABLE `data_gejala` (
 --
 
 INSERT INTO `data_gejala` (`id_gejala`, `kategori`, `gejala`) VALUES
-(18, 'Kulit', 'Normal'),
 (19, 'Kulit ', 'Membengkak'),
 (20, 'Kotoran ', 'Sedikit'),
 (21, 'Kotoran', 'Encer'),
@@ -512,8 +590,7 @@ INSERT INTO `data_penyakit` (`id_penyakit`, `penyakit`, `obat`, `solusi`) VALUES
 (4, 'Sembelit', 'Rebung', 'Tambah makanan berserat'),
 (5, 'Diare', 'Rebung', 'Dikasih makanan yang bernutrisi'),
 (6, 'Kembung', 'Rebung', 'Makanan yang diberikan harus kering'),
-(7, 'Scabies', 'Wormmectin', 'Disuntik dengan obat dan diberi salep'),
-(8, 'Sehat', 'Vitamin', 'Diberikan vitamin agar menambah imun ');
+(7, 'Scabies', 'Wormmectin', 'Disuntik dengan obat dan diberi salep');
 
 -- --------------------------------------------------------
 
@@ -535,60 +612,37 @@ INSERT INTO `data_sample` (`id_sample`, `id_gejala`, `id_penyakit`) VALUES
 (8, 19, 7),
 (9, 22, 7),
 (10, 24, 7),
-(11, 18, 4),
 (12, 20, 4),
-(14, 18, 5),
 (15, 21, 5),
 (16, 23, 5),
-(17, 18, 8),
-(18, 22, 8),
-(19, 24, 8),
-(20, 18, 4),
 (21, 20, 4),
 (22, 24, 4),
 (23, 19, 7),
 (24, 22, 7),
 (25, 24, 7),
-(26, 18, 5),
 (27, 21, 5),
 (28, 24, 5),
-(29, 18, 6),
 (30, 22, 6),
 (31, 23, 6),
-(32, 18, 5),
 (33, 21, 5),
 (34, 24, 5),
-(35, 18, 4),
 (36, 20, 4),
 (37, 24, 4),
-(38, 18, 6),
 (39, 22, 6),
 (40, 23, 6),
-(41, 18, 8),
-(42, 22, 8),
-(43, 24, 8),
 (44, 19, 7),
 (45, 22, 7),
 (46, 24, 7),
-(47, 18, 4),
 (48, 20, 4),
 (49, 24, 4),
-(50, 18, 5),
 (51, 21, 5),
 (52, 23, 5),
-(53, 18, 6),
 (54, 22, 6),
 (55, 23, 6),
-(56, 18, 4),
 (57, 20, 4),
 (58, 24, 4),
-(59, 18, 8),
-(60, 22, 8),
-(61, 24, 8),
-(62, 18, 6),
 (63, 22, 6),
 (64, 23, 6),
-(65, 18, 5),
 (66, 21, 5),
 (67, 23, 5),
 (68, 24, 4);
@@ -601,10 +655,21 @@ INSERT INTO `data_sample` (`id_sample`, `id_gejala`, `id_penyakit`) VALUES
 
 CREATE TABLE `decision_tree` (
   `id` int(11) NOT NULL,
-  `parent` int(11) NOT NULL,
-  `akar` varchar(255) NOT NULL,
+  `parent` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `detail` text NOT NULL,
+  `akar` text NOT NULL,
   `keputusan` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `decision_tree`
+--
+
+INSERT INTO `decision_tree` (`id`, `parent`, `detail`, `akar`, `keputusan`) VALUES
+(1, '20', 'Kotoran  Sedikit', 'Kotoran ', 4),
+(2, '21', 'Kotoran Encer', 'Kotoran', 5),
+(3, '22 19', 'Kotoran Normal dan Kulit  Membengkak', 'Kulit ', 7),
+(4, '22 23', 'Kotoran Normal dan Perut Kosong', 'Perut', 6);
 
 -- --------------------------------------------------------
 
@@ -623,118 +688,7 @@ CREATE TABLE `entropy` (
 --
 
 INSERT INTO `entropy` (`id`, `id_gejala`, `entropy`) VALUES
-(1, 21, 0),
-(2, 22, 0),
-(3, 22, 0),
-(4, 22, 0),
-(5, 20, 0),
-(6, 19, 0),
-(7, 18, 0),
-(8, 18, 0),
-(9, 18, 0),
-(10, 18, 0),
-(11, 24, 0),
-(12, 24, 0),
-(13, 24, 0),
-(14, 24, 0),
-(15, 23, 0),
-(16, 23, 0),
-(17, 21, 0),
-(18, 22, 0.52877123795494),
-(19, 22, 1.0498609162048),
-(20, 22, 1.5709505944547),
-(21, 20, 0),
-(22, 19, 0),
-(23, 18, 0),
-(24, 18, 0),
-(25, 18, 0),
-(26, 18, 0),
-(27, 24, 0),
-(28, 24, 0),
-(29, 24, 0),
-(30, 24, 0),
-(31, 23, 0),
-(32, 23, 0),
-(33, 21, 0),
-(34, 22, 0),
-(35, 22, 0),
-(36, 22, 0),
-(37, 20, 0),
-(38, 19, 0),
-(39, 18, 0),
-(40, 18, 0),
-(41, 18, 0),
-(42, 18, 0),
-(43, 24, 0),
-(44, 24, 0),
-(45, 24, 0),
-(46, 24, 0),
-(47, 23, 0),
-(48, 23, 0),
-(49, 21, 0),
-(50, 22, 0),
-(51, 22, 0),
-(52, 22, 0),
-(53, 20, 0),
-(54, 19, 0),
-(55, 18, 0),
-(56, 18, 0),
-(57, 18, 0),
-(58, 18, 0),
-(59, 24, 0),
-(60, 24, 0),
-(61, 24, 0),
-(62, 24, 0),
-(63, 23, 0),
-(64, 23, 0),
-(65, 21, 0),
-(66, 22, 0),
-(67, 22, 0),
-(68, 22, 0),
-(69, 20, 0),
-(70, 19, 0),
-(71, 18, 0.51927492540088),
-(72, 18, 1.0104426527539),
-(73, 18, 1.4520603599061),
-(74, 18, 1.971335285307),
-(75, 24, 0),
-(76, 24, 0),
-(77, 24, 0),
-(78, 24, 0),
-(79, 23, 0),
-(80, 23, 0),
-(81, 21, 0),
-(82, 22, 0),
-(83, 22, 0),
-(84, 22, 0),
-(85, 20, 0),
-(86, 19, 0),
-(87, 18, 0),
-(88, 18, 0),
-(89, 18, 0),
-(90, 18, 0),
-(91, 24, 0.4154522643294),
-(92, 24, 0.90363931450323),
-(93, 24, 1.3918263646771),
-(94, 24, 1.9220231428516),
-(95, 23, 0),
-(96, 23, 0),
-(97, 21, 0),
-(98, 22, 0),
-(99, 22, 0),
-(100, 22, 0),
-(101, 20, 0),
-(102, 19, 0),
-(103, 18, 0),
-(104, 18, 0),
-(105, 18, 0),
-(106, 18, 0),
-(107, 24, 0),
-(108, 24, 0),
-(109, 24, 0),
-(110, 24, 0),
-(111, 23, 0.52388246628705),
-(112, 23, 0.98522813603425);
+(1, 23, 0);
 
 -- --------------------------------------------------------
 
@@ -753,9 +707,7 @@ CREATE TABLE `gain` (
 --
 
 INSERT INTO `gain` (`id`, `kategori`, `gain`) VALUES
-(1, 'Kotoran', 1.5),
-(2, 'Kulit ', 0.60984030471643),
-(3, 'Perut', 0.69133040676184);
+(1, 'Perut', 0);
 
 -- --------------------------------------------------------
 
@@ -774,9 +726,7 @@ CREATE TABLE `gain_ratio` (
 --
 
 INSERT INTO `gain_ratio` (`id`, `kategori`, `gain_ratio`) VALUES
-(1, 'Kotoran', 1),
-(2, 'Kulit ', 1),
-(3, 'Perut', 0.74012851931214);
+(1, 'Perut', -0);
 
 -- --------------------------------------------------------
 
@@ -787,8 +737,20 @@ INSERT INTO `gain_ratio` (`id`, `kategori`, `gain_ratio`) VALUES
 CREATE TABLE `hasil` (
   `id_hasil` int(11) NOT NULL,
   `id_user` int(11) UNSIGNED NOT NULL,
-  `id_penyakit` int(11) NOT NULL
+  `id_penyakit` int(11) NOT NULL,
+  `penyakit` varchar(128) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `hasil`
+--
+
+INSERT INTO `hasil` (`id_hasil`, `id_user`, `id_penyakit`, `penyakit`) VALUES
+(1, 3, 4, 'Sembelit'),
+(2, 3, 4, 'Sembelit'),
+(3, 3, 5, 'Diare'),
+(4, 3, 4, 'Sembelit'),
+(5, 17, 4, 'Sembelit');
 
 -- --------------------------------------------------------
 
@@ -831,22 +793,7 @@ CREATE TABLE `mining_entropy` (
 --
 
 INSERT INTO `mining_entropy` (`id`, `id_gejala`, `id_penyakit`, `total`) VALUES
-(1, 21, 5, 5),
-(2, 22, 6, 4),
-(3, 22, 7, 3),
-(4, 22, 8, 3),
-(5, 20, 4, 5),
-(6, 19, 7, 3),
-(7, 18, 5, 5),
-(8, 18, 6, 4),
-(9, 18, 8, 3),
-(10, 18, 4, 5),
-(11, 24, 5, 2),
-(12, 24, 7, 3),
-(13, 24, 8, 3),
-(14, 24, 4, 5),
-(15, 23, 5, 3),
-(16, 23, 6, 4);
+(1, 23, 6, 4);
 
 -- --------------------------------------------------------
 
@@ -865,13 +812,7 @@ CREATE TABLE `mining_gain` (
 --
 
 INSERT INTO `mining_gain` (`id`, `kategori`, `gain`) VALUES
-(1, 'Kotoran', 0),
-(2, 'Kotoran', 0.78547529722735),
-(3, 'Kotoran ', 0),
-(4, 'Kulit ', 0),
-(5, 'Kulit', 1.6756349925109),
-(6, 'Perut', 1.2493150428535),
-(7, 'Perut', 0.34482984761199);
+(1, 'Perut', 0);
 
 -- --------------------------------------------------------
 
@@ -890,13 +831,7 @@ CREATE TABLE `mining_kasus` (
 --
 
 INSERT INTO `mining_kasus` (`id`, `id_gejala`, `total`) VALUES
-(1, 21, 5),
-(2, 22, 10),
-(3, 20, 5),
-(4, 19, 3),
-(5, 18, 17),
-(6, 24, 13),
-(7, 23, 7);
+(1, 23, 4);
 
 -- --------------------------------------------------------
 
@@ -909,72 +844,6 @@ CREATE TABLE `mining_sample` (
   `id_gejala` int(11) NOT NULL,
   `id_penyakit` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `mining_sample`
---
-
-INSERT INTO `mining_sample` (`id_sample`, `id_gejala`, `id_penyakit`) VALUES
-(8, 19, 7),
-(9, 22, 7),
-(10, 24, 7),
-(11, 18, 4),
-(12, 20, 4),
-(14, 18, 5),
-(15, 21, 5),
-(16, 23, 5),
-(17, 18, 8),
-(18, 22, 8),
-(19, 24, 8),
-(20, 18, 4),
-(21, 20, 4),
-(22, 24, 4),
-(23, 19, 7),
-(24, 22, 7),
-(25, 24, 7),
-(26, 18, 5),
-(27, 21, 5),
-(28, 24, 5),
-(29, 18, 6),
-(30, 22, 6),
-(31, 23, 6),
-(32, 18, 5),
-(33, 21, 5),
-(34, 24, 5),
-(35, 18, 4),
-(36, 20, 4),
-(37, 24, 4),
-(38, 18, 6),
-(39, 22, 6),
-(40, 23, 6),
-(41, 18, 8),
-(42, 22, 8),
-(43, 24, 8),
-(44, 19, 7),
-(45, 22, 7),
-(46, 24, 7),
-(47, 18, 4),
-(48, 20, 4),
-(49, 24, 4),
-(50, 18, 5),
-(51, 21, 5),
-(52, 23, 5),
-(53, 18, 6),
-(54, 22, 6),
-(55, 23, 6),
-(56, 18, 4),
-(57, 20, 4),
-(58, 24, 4),
-(59, 18, 8),
-(60, 22, 8),
-(61, 24, 8),
-(62, 18, 6),
-(63, 22, 6),
-(64, 23, 6),
-(65, 18, 5),
-(66, 21, 5),
-(67, 23, 5),
-(68, 24, 4);
 
 -- --------------------------------------------------------
 
@@ -993,13 +862,7 @@ CREATE TABLE `mining_splitinfo` (
 --
 
 INSERT INTO `mining_splitinfo` (`id`, `kategori`, `splitinfo`) VALUES
-(1, 'Kotoran', 0.5),
-(2, 'Kotoran', 0.5),
-(3, 'Kotoran ', 0.5),
-(4, 'Kulit ', 0.41054483912493),
-(5, 'Kulit', 0.19929546559147),
-(6, 'Perut', 0.40396744488508),
-(7, 'Perut', 0.53010061049042);
+(1, 'Perut', -4.7548875021635);
 
 -- --------------------------------------------------------
 
@@ -1009,8 +872,9 @@ INSERT INTO `mining_splitinfo` (`id`, `kategori`, `splitinfo`) VALUES
 
 CREATE TABLE `pemangkasan` (
   `id` int(11) NOT NULL,
-  `kategori` varchar(255) NOT NULL,
-  `gejala` varchar(255) NOT NULL
+  `parent` varchar(255) NOT NULL,
+  `akar` varchar(255) NOT NULL,
+  `keputusan` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -1047,11 +911,7 @@ INSERT INTO `users` (`id`, `email`, `username`, `fullname`, `user_image`, `passw
 (3, 'localmenoreh@gmail.com', 'yasir', 'Muhammad Yasir', 'default.svg', '$2y$10$ppc734GWeQ1LWIsICKbTo.ECttHfcNquCOroCrLts.T3QDPtwqbv.', NULL, '2021-09-22 08:14:36', NULL, NULL, NULL, NULL, 1, 0, '2021-03-26 06:58:59', '2021-09-22 08:22:56', NULL),
 (4, 'yasir123983@gmail.com', 'yasiryas', 'Muhammad Yasir', 'default.svg', '$2y$10$D7WoSVSs8ilbNIdkhe.kX.zqSiUprs5qBCZJVmaZLO/uMGOlD6z8y', '48085379c77eedc9eb42a6b96dcf5bff', '2021-04-03 23:26:48', '2021-06-28 10:47:22', NULL, NULL, NULL, 1, 0, '2021-03-26 08:49:25', '2021-06-28 09:47:22', NULL),
 (9, 'abizgelap@gmail.com', 'abizgelap', NULL, 'default.svg', '$2y$10$K4pHK2Ma4UaXKv6LClvvb.svYgi/jGP0R43yVCHGUg8tpxet3tbVK', NULL, NULL, NULL, '6fc82e7393ecb91c759dccf4cb80ce98', NULL, NULL, 0, 0, '2021-04-04 13:11:31', '2021-04-04 13:11:31', NULL),
-(10, 'yorawaton@gmail.com', 'yoo', NULL, 'default.svg', '$2y$10$eooUIG8JDx4f5FosAiSyzuwCsx75v8ayC9uPK4OrX9hNRoWIGIws6', '8441a98d374732c7e81bdf0c36e446a8', NULL, '2021-06-28 10:46:36', 'efd32d3dd1a32fc3e8c89d115e1ddd12', NULL, NULL, 0, 0, '2021-04-04 13:11:58', '2021-06-28 09:46:36', NULL),
-(12, 'yasiryas2021@gmail.com', 'yasiryas1', NULL, 'default.svg', '$2y$10$99q8MMn5MTA3xBG6qvtpKek1CB1zJMBhRUbVwlw76llqULdOzi3lS', NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, '2021-06-28 09:55:47', '2021-06-28 09:56:14', NULL),
-(13, 'trihastono@upy.ac.id', 'xxx', NULL, 'default.svg', '$2y$10$qxJJVtlFyXXx4tGLduRow.dCx4KCk9VQa9.sNgaJ5CNc9jT9TSr0.', NULL, NULL, NULL, '58e5fe319d1b69497e0a5aa326b7ab8a', NULL, NULL, 0, 0, '2021-08-27 09:44:01', '2021-08-27 09:44:01', NULL),
-(14, 'trihastono.13@gmail.com', 'paktri', NULL, 'default.svg', '$2y$10$5seR9/jOz2Knmwd9TTOCsucihWiAcLYCTszGFSia5apyRzmF5boZO', NULL, NULL, NULL, '65d1b7da94a6fb4b92ce89e3dea2f867', NULL, NULL, 0, 0, '2021-08-27 09:48:08', '2021-08-27 09:48:08', NULL),
-(15, 'smpmuh1kalibawang@gmail.com', 'okkay', NULL, 'default.svg', '$2y$10$p/alcfMJ4GhYrtUP8TiBFO.7ZMdST6O1BXdWtWtdE3WoxmqsSqE6a', NULL, NULL, NULL, 'c89e3827e9b859812379c5bd3694c1bf', NULL, NULL, 0, 0, '2021-08-27 17:17:18', '2021-08-27 17:17:18', NULL);
+(17, 'yasiryasdks@gmail.com', 'yasir dks', 'Muhammad Yasir', 'default.svg', '$2y$10$PhQ62PrA/FybpxgmcH6ewOXrCVXglIMRjtIhpj98CkXWQQw.//oiy', NULL, NULL, NULL, NULL, NULL, NULL, 1, 0, '2021-12-04 21:58:50', '2021-12-04 22:04:19', NULL);
 
 --
 -- Indexes for dumped tables
@@ -1143,7 +1003,7 @@ ALTER TABLE `data_sample`
 --
 ALTER TABLE `decision_tree`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `parent` (`parent`),
+  ADD UNIQUE KEY `parent` (`parent`) USING HASH,
   ADD KEY `keputusan` (`keputusan`);
 
 --
@@ -1236,7 +1096,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `auth_activation_attempts`
 --
 ALTER TABLE `auth_activation_attempts`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `auth_groups`
@@ -1248,7 +1108,7 @@ ALTER TABLE `auth_groups`
 -- AUTO_INCREMENT for table `auth_logins`
 --
 ALTER TABLE `auth_logins`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=204;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=284;
 
 --
 -- AUTO_INCREMENT for table `auth_permissions`
@@ -1260,7 +1120,7 @@ ALTER TABLE `auth_permissions`
 -- AUTO_INCREMENT for table `auth_reset_attempts`
 --
 ALTER TABLE `auth_reset_attempts`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT for table `auth_tokens`
@@ -1272,7 +1132,7 @@ ALTER TABLE `auth_tokens`
 -- AUTO_INCREMENT for table `data_gejala`
 --
 ALTER TABLE `data_gejala`
-  MODIFY `id_gejala` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id_gejala` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `data_penyakit`
@@ -1290,31 +1150,31 @@ ALTER TABLE `data_sample`
 -- AUTO_INCREMENT for table `decision_tree`
 --
 ALTER TABLE `decision_tree`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `entropy`
 --
 ALTER TABLE `entropy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `gain`
 --
 ALTER TABLE `gain`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `gain_ratio`
 --
 ALTER TABLE `gain_ratio`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `hasil`
 --
 ALTER TABLE `hasil`
-  MODIFY `id_hasil` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_hasil` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -1326,19 +1186,19 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `mining_entropy`
 --
 ALTER TABLE `mining_entropy`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `mining_gain`
 --
 ALTER TABLE `mining_gain`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `mining_kasus`
 --
 ALTER TABLE `mining_kasus`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `mining_sample`
@@ -1350,7 +1210,7 @@ ALTER TABLE `mining_sample`
 -- AUTO_INCREMENT for table `mining_splitinfo`
 --
 ALTER TABLE `mining_splitinfo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `pemangkasan`
@@ -1362,7 +1222,7 @@ ALTER TABLE `pemangkasan`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- Constraints for dumped tables
@@ -1406,7 +1266,6 @@ ALTER TABLE `data_sample`
 -- Constraints for table `decision_tree`
 --
 ALTER TABLE `decision_tree`
-  ADD CONSTRAINT `decision_tree_ibfk_1` FOREIGN KEY (`parent`) REFERENCES `data_gejala` (`id_gejala`),
   ADD CONSTRAINT `decision_tree_ibfk_2` FOREIGN KEY (`keputusan`) REFERENCES `data_penyakit` (`id_penyakit`);
 
 --
