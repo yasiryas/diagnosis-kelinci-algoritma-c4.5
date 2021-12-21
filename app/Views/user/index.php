@@ -12,32 +12,32 @@
             <div class="col-sm-3" id="dashboardAdmin">
                 <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
                     <div class="card-body">
-                        <h5 class="card-title">Total user yang terdaftar</h5>
-                        <h3 class="card-text"><?= $user ?></h3>
+                        <h1 class="card-title"><?= $user ?></h1>
+                        <p class="card-text">user yang terdaftar</p>
                     </div>
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="card text-white bg-warning mb-3" style="max-width: 18rem;">
                     <div class="card-body">
-                        <h5 class="card-title">Total gejala yang terdaftar</h5>
-                        <h3 class="card-text"><?= $gejala; ?></h3>
+                        <h1 class="card-title"><?= $gejala; ?></h1>
+                        <p class="card-text">gejala yang terdaftar</p>
                     </div>
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="card text-white bg-success mb-3" style="max-width: 18rem;">
                     <div class="card-body">
-                        <h5 class="card-title">Total penyakit yang terdaftar</h5>
-                        <h3 class="card-text"><?= $penyakit; ?></h3>
+                        <h1 class="card-title"><?= $penyakit; ?></h1>
+                        <p class="card-text">penyakit yang terdaftar</p>
                     </div>
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">
                     <div class="card-body">
-                        <h5 class="card-title">Total rekaman konsultasi</h5>
-                        <h3 class="card-text"><?= $hasil; ?></h3>
+                        <h1 class="card-title"><?= $hasil; ?></h1>
+                        <p class="card-text">rekaman konsultasi</p>
                     </div>
                 </div>
             </div>
@@ -47,23 +47,23 @@
             <div class="col-sm-3">
                 <div class="card text-white bg-warning mb-3" style="max-width: 18rem;">
                     <div class="card-body">
-                        <h5 class="card-title">Total gejala yang terdaftar</h5>
-                        <h3 class="card-text"><?= $gejala; ?></h3>
+                        <h1 class="card-title"><?= $gejala; ?></h1>
+                        <p class="card-text">gejala yang terdaftar</p>
                     </div>
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="card text-white bg-success mb-3" style="max-width: 18rem;">
                     <div class="card-body">
-                        <h5 class="card-title">Total penyakit yang terdaftar</h5>
-                        <h3 class="card-text"><?= $penyakit; ?></h3>
+                        <h1 class="card-title"><?= $penyakit; ?></h1>
+                        <p class="card-text">penyakit yang terdaftar</p>
                     </div>
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="card text-white bg-secondary mb-3" style="max-width: 18rem;">
                     <div class="card-body">
-                        <h5 class="card-title">Total rekaman konsultasi</h5>
+                        <h5 class="card-title">rekaman konsultasi</h5>
                         <h3 class="card-text"><?= $hasil; ?></h3>
                     </div>
                 </div>
