@@ -29,12 +29,20 @@ $routes->setAutoRoute(false);
  * --------------------------------------------------------------------
  */
 
-$routes->get('/', 'User::index');
+$routes->addPlaceholder('slug', '[a-z0-9-]+');
+
+$routes->get('/', 'Home::landing');
+$routes->get('mulai-diagnosis', 'Home::startDiagnosis');
+$routes->get('diagnosa', 'Diagnosis::index');
+$routes->post('diagnosa/proses', 'Diagnosis::proses');
+$routes->get('artikel', 'Artikel::index');
+$routes->get('artikel/(:slug)', 'Artikel::show/$1');
 
 $routes->group('user', ['filter' => 'login'], static function ($routes) {
     $routes->get('', 'User::index');
     $routes->get('index', 'User::index');
     $routes->get('diagnosis', 'User::diagnosis');
+    $routes->post('diagnosis', 'User::simpanDiagnosis');
     $routes->get('profile', 'User::profile');
     $routes->get('edit', 'User::edit');
     $routes->get('changepassword', 'User::changePassword');
@@ -63,12 +71,16 @@ $routes->group('admin', ['filter' => 'admin'], static function ($routes) {
     $routes->post('deletesample', 'Admin::deleteSample');
     $routes->get('detail/(:num)', 'Admin::detail/$1');
     $routes->get('decisiontree', 'Admin::decisionTree');
+    $routes->get('artikel', 'Admin::artikel');
+    $routes->post('tambahartikel', 'Admin::tambahArtikel');
+    $routes->post('updateartikel', 'Admin::updateArtikel');
+    $routes->post('deleteartikel', 'Admin::deleteArtikel');
 });
 
 $routes->group('mining', ['filter' => 'admin'], static function ($routes) {
     $routes->get('hitung', 'Mining::hitung');
-    $routes->get('mining', 'Mining::mining');
-    $routes->get('kosong', 'Mining::kosong');
+    $routes->post('mining', 'Mining::mining');
+    $routes->post('kosong', 'Mining::kosong');
 });
 
 /*

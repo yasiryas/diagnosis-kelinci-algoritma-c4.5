@@ -1,140 +1,74 @@
 <?= $this->extend('templates/index'); ?>
 
-
 <?= $this->section('page-content'); ?>
-
-<!-- Begin Page Content -->
 <div class="container-fluid">
+    <h1 class="h3 mb-4 text-gray-800"><?= esc($title); ?></h1>
 
-    <!-- Page Heading -->
-    <h1 class="h3 mb-4 text-gray-800"><?= $title; ?></h1>
-    <div class="row">
-        <div class="col-lg-8">
-            Atribut berjumlah <?= $atribut->atribut; ?>
-            <br>
-            Data kasus berjumlah <?= $jumlahkasus; ?>
-            <br>
-
-            <br>
-            <?php $entropytotal = 0; ?>
-            <?php foreach ($jumlahpenyakit as $jp) : ?>
-                <?= $jp->penyakit; ?> = <?= ($jp->total) / ($atribut->atribut); ?>
-                <br>
-                <?php
-                $jumlahAtribut = ($jp->total) / ($atribut->atribut);;
-                $proportion = $jumlahAtribut / $jumlahkasus;
-                $entropy = (-$proportion * log($proportion, 2));
-                $entropytotal += $entropy;
-                ?>
-                <?= $entropy;
-                ?>
-
-                <br>
-            <?php endforeach; ?>
-            <br>
-            Entropy Total = <?= $entropytotal; ?>
-            <br><br>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">Nilai Atribut</th>
-                        <th scope="col">Jumlah Kasus</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($kasus as $k) : ?>
+    <div class="card mb-4">
+        <div class="card-header font-weight-bold">Dataset (kasus per penyakit)</div>
+        <div class="card-body">
+            <p class="mb-1">Atribut (kategori): <b><?= esc($atributCount); ?></b></p>
+            <p class="mb-3">Jumlah kasus: <b><?= esc($jumlahkasus); ?></b></p>
+            <div class="table-responsive">
+                <table class="table table-sm table-bordered mb-0">
+                    <thead><tr><th>#</th><th>Penyakit</th><?php foreach (array_keys(reset($instances)['attrs'] ?? []) as $k): ?><th><?= esc($k); ?></th><?php endforeach; ?></tr></thead>
+                    <tbody>
+                    <?php $n=1; foreach ($instances as $inst): ?>
                         <tr>
-
-                            <td><?= $k->kategori; ?> <?= $k->gejala; ?></td>
-                            <td><?= $k->total; ?></td>
-
+                            <td><?= $n++; ?></td>
+                            <td><?= esc($penyakitInfo[$inst['penyakit']] ?? $inst['penyakit']); ?></td>
+                            <?php foreach ($inst['attrs'] as $gid): ?>
+                                <td><?= $gid && isset($gejalaInfo[$gid]) ? esc($gejalaInfo[$gid]['gejala']) : '-'; ?></td>
+                            <?php endforeach; ?>
                         </tr>
                     <?php endforeach; ?>
-                </tbody>
-            </table>
-            <br>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">Gejala</th>
-                        <th scope="col">Jumlah</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($jumlahgejala as $jg) : ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header font-weight-bold">Rumus &amp; Perhitungan (Node Akar)</div>
+        <div class="card-body">
+            <p class="mb-1"><b>Entropy(S)</b> = − Σ p<sub>i</sub> · log<sub>2</sub>(p<sub>i</sub>)</p>
+            <p class="mb-1"><b>Gain(S,A)</b> = Entropy(S) − Σ (|S<sub>v</sub>|/|S|) · Entropy(S<sub>v</sub>)</p>
+            <p class="mb-3"><b>SplitInfo(S,A)</b> = − Σ (|S<sub>v</sub>|/|S|) · log<sub>2</sub>(|S<sub>v</sub>|/|S|), &nbsp; <b>GainRatio(S,A)</b> = Gain(S,A) / SplitInfo(S,A)</p>
+
+            <p class="mb-1">Distribusi kelas: <?php
+                $parts = [];
+                foreach ($calc['distribution'] as $pid => $c) { $parts[] = ($penyakitInfo[$pid] ?? $pid) . '=' . $c; }
+                echo esc(implode(', ', $parts));
+            ?></p>
+            <p class="mb-3"><b>Entropy(S)</b> = <?= number_format($calc['totalEntropy'], 6); ?></p>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-sm">
+                    <thead class="thead-light"><tr><th>Atribut</th><th>Nilai</th><th>|Sv|</th><th>Entropy(Sv)</th><th>Gain</th><th>SplitInfo</th><th>GainRatio</th></tr></thead>
+                    <tbody>
+                    <?php foreach ($calc['attributes'] as $attr => $info): $first=true; $rows=max(count($info['values']),1); foreach ($info['values'] as $gid => $v): ?>
                         <tr>
-                            <td><?= $jg->kategori; ?> <?= $jg->gejala; ?></td>
-                            <td> <?= $jg->total; ?> </td>
+                            <?php if ($first): ?><td rowspan="<?= $rows; ?>"><?= esc($attr); ?></td><?php endif; ?>
+                            <td><?= esc(($gejalaInfo[$gid]['label'] ?? $gid)); ?></td>
+                            <td><?= esc($v['count']); ?></td>
+                            <td><?= number_format($v['entropy'], 6); ?></td>
+                            <?php if ($first): ?>
+                                <td rowspan="<?= $rows; ?>"><?= number_format($info['gain'], 6); ?></td>
+                                <td rowspan="<?= $rows; ?>"><?= number_format($info['splitInfo'], 6); ?></td>
+                                <td rowspan="<?= $rows; ?>"><b><?= number_format($info['gainRatio'], 6); ?></b></td>
+                            <?php $first=false; endif; ?>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-            <br>
-
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">Kasus</th>
-                        <th scope="col">Penyakit</th>
-                        <th scope="col">Jumlah</th>
-                        <th scope="col">Entropy</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $entropyHitung = $entropytotal;
-                    $entropyAtr = 0;
-                    $gainAtr = 0;
-                    foreach ($kasus as $k) :
-                        foreach ($jumlahgejala as $jg) :
-                            foreach ($jumlahkasuspenyakit as $jkp) :
-                    ?>
-                                <tr>
-                                    <td><?= $jkp->kategori; ?> <?= $jkp->gejala; ?></td>
-                                    <td><?= $jkp->penyakit; ?></td>
-                                    <td> <?= $jkp->total; ?> </td>
-                                    <td>
-                                        <?php
-                                        if ($jkp->id_gejala == $jg->id_gejala) { ?>
-                                        <?= $entropyA = (- ($jkp->total / $jg->total) * log(($jkp->total / $jg->total), 2));
-
-                                            if ($jkp->id_gejala == $jg->id_gejala and $jg->gejala) {
-                                                $entropyAtr += $entropyA;
-                                            } else {
-                                                $entropyAtr = 0;
-                                            }
-                                        } else {
-                                            $entropyAtr = 0;
-                                        }
-                                        if ($jkp->kategori == $k->kategori) {
-                                            $gainA = ((($k->total / $jumlahkasus)) * $entropyAtr);
-                                            $gainAtr += $gainA;
-                                            $gain = $entropyHitung - $gainAtr;
-                                            // $gainAtr = $entropyHitung - (((($k->total) / $jumlahkasus) * $entropyAtr));
-                                        } else {
-                                            $entropyHitung = $entropytotal;
-                                            $gain = 0;
-                                        }
-                                        ?>
-                                        <br>
-                                        <?=
-
-                                        'Entropy Atribut = ' . $entropyAtr . '<br>' .
-                                            'Gain = ' . $gain;
-
-                                        ?>
-                                    </td>
-                                </tr>
-                    <?php
-                            endforeach;
-                        endforeach;
-                    endforeach;
-                    ?>
-                </tbody>
-            </table>
-            <?= $entropyAtr; ?>
+                    <?php endforeach; if (empty($info['values'])): ?>
+                        <tr><td><?= esc($attr); ?></td><td colspan="3" class="text-muted">-</td><td>0</td><td>0</td><td>0</td></tr>
+                    <?php endif; endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-muted mb-0">Atribut terpilih (GainRatio tertinggi): <b><?php
+                $bestA=null; $best=null; foreach($calc['attributes'] as $a=>$i){ if($best===null || $i['gainRatio']>$best){$best=$i['gainRatio']; $bestA=$a;} }
+                echo esc($bestA ?? '-');
+            ?></b></p>
         </div>
     </div>
 </div>
-
 <?= $this->endSection(); ?>

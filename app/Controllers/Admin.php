@@ -8,6 +8,10 @@ use App\Models\penyakitModel;
 use App\Models\sampleModel;
 use App\Models\miningModel;
 use App\Models\decisionTreeModel;
+use App\Models\artikelModel;
+use App\Services\ArticleSlug;
+use App\Services\DashboardChartData;
+use App\Services\DecisionTreeGraph;
 
 
 class Admin extends BaseController
@@ -31,6 +35,8 @@ class Admin extends BaseController
         $this->sampleModel = new sampleModel();
         $this->miningModel = new miningModel();
         $this->decisionTreeModel = new decisionTreeModel();
+        $this->artikelModel = new artikelModel();
+        $this->articleSlug = new ArticleSlug();
     }
 
     public function index()
@@ -41,6 +47,11 @@ class Admin extends BaseController
             'gejala' => $this->gejalaModel->countGejala(),
             'penyakit' => $this->penyakitModel->countPenyakit(),
             'hasil' => $this->listModel->countAllHasil(),
+            'chartData' => DashboardChartData::payload([
+                'gejala' => $this->gejalaModel->countGejala(),
+                'penyakit' => $this->penyakitModel->countPenyakit(),
+                'sample' => $this->miningModel->countDataSample(),
+            ], $this->listModel->countHasilPerPenyakit()),
         ];
 
         return view('user/index', $data);
@@ -49,7 +60,7 @@ class Admin extends BaseController
     public function profile()
     {
         $data['title'] = 'My Profile';
-        return view('admin/index', $data);
+        return view('admin/profile', $data);
     }
 
     public function userlist()
@@ -70,6 +81,7 @@ class Admin extends BaseController
             'pager' => $this->listModel->pager,
             'currentPage' => $currentPage,
             'page' => $page,
+            'keyword' => $keyword,
         ];
 
         return view('admin/userlist', $data);
@@ -93,6 +105,7 @@ class Admin extends BaseController
             'pager' => $this->gejalaModel->pager,
             'currentPage' => $currentPage,
             'page' => $page,
+            'keyword' => $keyword,
         ];
 
         return view('admin/gejala', $data);
@@ -100,53 +113,74 @@ class Admin extends BaseController
 
     public function tambahGejala()
     {
-        //validate gejala and kategori
         $gejala = $this->request->getVar('gejala');
         $kategori = $this->request->getVar('kategori');
 
         if ($kategori || $gejala) {
             $val = $this->gejalaModel->validateGejala($kategori, $gejala);
             if ($val->countAllResults() > 0) {
+                if ($this->request->isAJAX()) {
+                    return $this->ajaxResponse(['message' => 'Gejala sudah ada!', 'errors' => ['gejala' => 'Gejala sudah ada!']], 422);
+                }
                 session()->setFlashdata('erorr', 'Gejala sudah ada!');
-                return redirect()->to('/admin/gejala')->withInput();
+                return redirect()->to('admin/gejala')->withInput();
             }
         }
-        //end validate
 
         $this->gejalaModel->save([
-            'kategori' => $this->request->getVar('kategori'),
-            'gejala' => $this->request->getVar('gejala'),
+            'kategori' => $kategori,
+            'gejala' => $gejala,
         ]);
+
+        if ($this->request->isAJAX()) {
+            return $this->ajaxResponse([
+                'message' => 'Gejala berhasil ditambahkan',
+                'row' => [
+                    'id_gejala' => $this->gejalaModel->getInsertID(),
+                    'kategori' => $kategori,
+                    'gejala' => $gejala,
+                ],
+            ]);
+        }
+
         session()->setFlashdata('pesan', 'Gejala berhasil ditambahkan');
-        return redirect()->to('/admin/gejala');
+        return redirect()->to('admin/gejala');
     }
 
     public function updateGejala()
     {
-        //validate gejala and kategori
+        $idGejala = (int) $this->request->getVar('id_gejala');
         $gejala = $this->request->getVar('gejala');
         $kategori = $this->request->getVar('kategori');
 
         if ($kategori || $gejala) {
             $val = $this->gejalaModel->validateGejala($kategori, $gejala);
             if ($val->countAllResults() > 0) {
+                if ($this->request->isAJAX()) {
+                    return $this->ajaxResponse(['message' => 'Gejala sudah ada!', 'errors' => ['gejala' => 'Gejala sudah ada!']], 422);
+                }
                 session()->setFlashdata('update erorr', 'Gejala sudah ada!');
-                return redirect()->to('/admin/gejala')->withInput();
+                return redirect()->to('admin/gejala')->withInput();
             }
         }
-        //end validate
 
-        //query update
         $this->gejalaModel
-            ->whereIn('id_gejala', [$this->request->getVar('id_gejala')])
+            ->whereIn('id_gejala', [$idGejala])
             ->set([
-                'kategori' => $this->request->getVar('kategori'),
-                'gejala' => $this->request->getVar('gejala'),
+                'kategori' => $kategori,
+                'gejala' => $gejala,
             ])
             ->update();
 
+        if ($this->request->isAJAX()) {
+            return $this->ajaxResponse([
+                'message' => 'Gejala berhasil diubah',
+                'row' => ['id_gejala' => $idGejala, 'kategori' => $kategori, 'gejala' => $gejala],
+            ]);
+        }
+
         session()->setFlashdata('pesan', 'Gejala berhasil diubah');
-        return redirect()->to('/admin/gejala');
+        return redirect()->to('admin/gejala');
     }
 
     public function deleteGejala()
@@ -160,8 +194,15 @@ class Admin extends BaseController
         $this->sampleModel->where('id_gejala', $idGejala)->delete();
         $this->gejalaModel->where('id_gejala', $idGejala)->delete();
 
+        if ($this->request->isAJAX()) {
+            return $this->ajaxResponse([
+                'message' => 'Gejala berhasil dihapus',
+                'row' => ['id_gejala' => $idGejala],
+            ]);
+        }
+
         session()->setFlashdata('pesan', 'Gejala berhasil dihapus');
-        return redirect()->to('/admin/gejala');
+        return redirect()->to('admin/gejala');
     }
 
     public function penyakit()
@@ -182,6 +223,7 @@ class Admin extends BaseController
             'pager' => $this->penyakitModel->pager,
             'currentPage' => $currentPage,
             'page' => $page,
+            'keyword' => $keyword,
         ];
 
         return view('admin/penyakit', $data);
@@ -189,7 +231,6 @@ class Admin extends BaseController
 
     public function tambahPenyakit()
     {
-        //validate gejala and kategori
         $penyakit = $this->request->getVar('penyakit');
         $obat = $this->request->getVar('obat');
         $solusi = $this->request->getVar('solusi');
@@ -197,11 +238,13 @@ class Admin extends BaseController
         if ($penyakit) {
             $val = $this->penyakitModel->validatePenyakit($penyakit);
             if ($val->countAllResults() > 0) {
+                if ($this->request->isAJAX()) {
+                    return $this->ajaxResponse(['message' => 'Penyakit sudah ada!', 'errors' => ['penyakit' => 'Penyakit sudah ada!']], 422);
+                }
                 session()->setFlashdata('erorr-tambah-penyakit', 'Penyakit sudah ada!');
-                return redirect()->to('/admin/penyakit')->withInput();
+                return redirect()->to('admin/penyakit')->withInput();
             }
         }
-        //end validate
 
         $this->penyakitModel->save([
             'penyakit' => $penyakit,
@@ -209,24 +252,45 @@ class Admin extends BaseController
             'solusi' => $solusi,
         ]);
 
+        if ($this->request->isAJAX()) {
+            return $this->ajaxResponse([
+                'message' => 'Penyakit berhasil ditambahkan',
+                'row' => [
+                    'id_penyakit' => $this->penyakitModel->getInsertID(),
+                    'penyakit' => $penyakit,
+                    'obat' => $obat,
+                    'solusi' => $solusi,
+                ],
+            ]);
+        }
+
         session()->setFlashdata('pesan', 'Penyakit berhasil ditambahkan');
-        return redirect()->to('/admin/penyakit');
+        return redirect()->to('admin/penyakit');
     }
 
     public function updatePenyakit()
     {
-        //query update
+        $idPenyakit = (int) $this->request->getVar('id_penyakit');
+        $obat = $this->request->getVar('obat');
+        $solusi = $this->request->getVar('solusi');
+
         $this->penyakitModel
-            ->whereIn('id_penyakit', [$this->request->getVar('id_penyakit')])
+            ->whereIn('id_penyakit', [$idPenyakit])
             ->set([
-                // 'penyakit' => $this->request->getVar('penyakit'),
-                'obat' => $this->request->getVar('obat'),
-                'solusi' => $this->request->getVar('solusi'),
+                'obat' => $obat,
+                'solusi' => $solusi,
             ])
             ->update();
 
+        if ($this->request->isAJAX()) {
+            return $this->ajaxResponse([
+                'message' => 'Penyakit berhasil diubah!',
+                'row' => ['id_penyakit' => $idPenyakit, 'obat' => $obat, 'solusi' => $solusi],
+            ]);
+        }
+
         session()->setFlashdata('pesan', 'Penyakit berhasil diubah!');
-        return redirect()->to('/admin/penyakit');
+        return redirect()->to('admin/penyakit');
     }
 
     public function deletePenyakit()
@@ -240,8 +304,15 @@ class Admin extends BaseController
         $this->sampleModel->where('id_penyakit', $idPenyakit)->delete();
         $this->penyakitModel->where('id_penyakit', $idPenyakit)->delete();
 
+        if ($this->request->isAJAX()) {
+            return $this->ajaxResponse([
+                'message' => 'Penyakit berhasil dihapus',
+                'row' => ['id_penyakit' => $idPenyakit],
+            ]);
+        }
+
         session()->setFlashdata('pesan', 'Penyakit berhasil dihapus');
-        return redirect()->to('/admin/penyakit');
+        return redirect()->to('admin/penyakit');
     }
 
     public function dataSample()
@@ -263,6 +334,7 @@ class Admin extends BaseController
             'pager' => $this->sampleModel->pager,
             'currentPage' => $currentPage,
             'page' => $page,
+            'keyword' => $keyword,
         ];
         $data['gejala'] = $this->gejalaModel->findall();
         $data['penyakit'] = $this->penyakitModel->findall();
@@ -272,42 +344,70 @@ class Admin extends BaseController
 
     public function tambahSample()
     {
-        //get data
-        $gejala = $this->request->getVar('sampleGejala');
-        $penyakit = $this->request->getVar('samplePenyakit');
-
+        $gejala = (int) $this->request->getVar('sampleGejala');
+        $penyakit = (int) $this->request->getVar('samplePenyakit');
 
         $this->sampleModel->save([
             'id_gejala' => $gejala,
             'id_penyakit' => $penyakit,
         ]);
 
+        if ($this->request->isAJAX()) {
+            return $this->ajaxResponse([
+                'message' => 'Sample berhasil ditambahkan, harap click tombol Start Mining untuk proses data mining!',
+                'row' => [
+                    'id_sample' => $this->sampleModel->getInsertID(),
+                    'id_gejala' => $gejala,
+                    'id_penyakit' => $penyakit,
+                ],
+            ]);
+        }
+
         session()->setFlashdata('pesanSample', 'Sample berhasil ditambahkan, harap click tombol Start Mining untuk proses data mining!');
-        return redirect()->to('/admin/datasample');
+        return redirect()->to('admin/datasample');
     }
 
     public function updateSample()
     {
-        //query update
+        $idSample = (int) $this->request->getVar('id_sample');
+        $gejala = (int) $this->request->getVar('sampleGejala');
+        $penyakit = (int) $this->request->getVar('samplePenyakit');
+
         $this->sampleModel
-            ->whereIn('id_sample', [$this->request->getVar('id_sample')])
+            ->whereIn('id_sample', [$idSample])
             ->set([
-                'id_gejala' => $this->request->getVar('sampleGejala'),
-                'id_penyakit' => $this->request->getVar('samplePenyakit'),
+                'id_gejala' => $gejala,
+                'id_penyakit' => $penyakit,
             ])
             ->update();
 
+        if ($this->request->isAJAX()) {
+            return $this->ajaxResponse([
+                'message' => 'Data sample berhasil diubah, harap click tombol Start Mining untuk proses data mining!',
+                'row' => ['id_sample' => $idSample, 'id_gejala' => $gejala, 'id_penyakit' => $penyakit],
+            ]);
+        }
+
         session()->setFlashdata('pesanSample', 'Data sample berhasil diubah, harap click tombol Start Mining untuk proses data mining!');
-        return redirect()->to('/admin/datasample');
+        return redirect()->to('admin/datasample');
     }
 
     public function deleteSample()
     {
-        $this->sampleModel->where('id_sample', [$this->request->getVar('id_sample')])->delete();
+        $idSample = (int) $this->request->getVar('id_sample');
+
+        $this->sampleModel->where('id_sample', [$idSample])->delete();
+
+        if ($this->request->isAJAX()) {
+            return $this->ajaxResponse([
+                'message' => 'Sample berhasil dihapus, harap click tombol Start Mining untuk proses data mining!',
+                'row' => ['id_sample' => $idSample],
+            ]);
+        }
 
         session()->setFlashdata('pesanSample', 'Sample berhasil dihapus, harap click tombol Start Mining untuk proses data mining!');
 
-        return redirect()->to('/admin/datasample');
+        return redirect()->to('admin/datasample');
     }
 
     public function detail($id = 0)
@@ -332,22 +432,21 @@ class Admin extends BaseController
     public function decisionTree()
     {
         $currentPage = $this->request->getVar('decision_tree') ? $this->request->getVar('decision_tree') : 1;
-
         $keyword = $this->request->getVar('keyword');
-        if ($keyword) {
-            $decisiontree = $this->decisionTreeModel->search($keyword);
-        } else {
-            $decisiontree = $this->decisionTreeModel;
-        }
+        $decisiontree = $keyword ? $this->decisionTreeModel->search($keyword) : $this->decisionTreeModel;
 
         $page = 8;
-        // $data = [
-        //     'title' => 'Decision Tree',
-        //     'decisiontree' => $decisiontree->paginate($page, 'decision_tree'),
-        //     'pager' => $this->decisionTreeModel->pager,
-        //     'currentPage' => $currentPage,
-        //     'page' => $page,
-        // ];
+        $rows = $this->db->query(
+            "SELECT dt.akar, dt.parent, dt.detail, dt.keputusan, p.penyakit
+             FROM decision_tree dt JOIN data_penyakit p ON p.id_penyakit = dt.keputusan
+             ORDER BY dt.id"
+        )->getResultArray();
+
+        $symptomLabels = [];
+        foreach ($this->db->query("SELECT id_gejala, kategori, gejala FROM data_gejala")->getResultArray() as $g) {
+            $symptomLabels[$g['id_gejala']] = trim($g['kategori'] . ' ' . $g['gejala']);
+        }
+        $graph = new DecisionTreeGraph($rows, $symptomLabels);
 
         $data = [
             'title' => 'Decision Tree',
@@ -356,9 +455,202 @@ class Admin extends BaseController
             'pager' => $this->decisionTreeModel->pager,
             'currentPage' => $currentPage,
             'page' => $page,
+            'keyword' => $keyword,
+            'svg' => $graph->toSvg(),
+            'treeList' => $graph->toAccessibleList(),
         ];
-        $data['penyakit'] = $this->penyakitModel->findall();
 
         return view('admin/decisiontree', $data);
+    }
+
+    public function artikel()
+    {
+        $keyword = $this->request->getVar('keyword');
+        $query = $this->artikelModel;
+        if ($keyword) {
+            $query = $this->artikelModel->like('judul', $keyword)->orLike('slug', $keyword);
+        }
+
+        $articles = $query->paginate(8);
+        $categories = $this->artikelModel->getCategoryOptions();
+        foreach ($articles as &$article) {
+            $categoryIds = $this->artikelModel->getCategoryIds((int) $article['id']);
+            $firstCategory = $categoryIds[0] ?? 0;
+            $article['kategori_id'] = $firstCategory;
+            $article['nama_kategori'] = $categories[$firstCategory] ?? '';
+        }
+        unset($article);
+
+        $data = [
+            'title' => 'Data Artikel',
+            'artikel' => $articles,
+            'pager' => $this->artikelModel->pager,
+            'kategori' => $categories,
+            'keyword' => $keyword,
+        ];
+
+        return view('admin/artikel', $data);
+    }
+
+    public function tambahArtikel()
+    {
+        $judul = trim((string) $this->request->getVar('judul'));
+        $kategoriId = (int) $this->request->getVar('kategori_id');
+        $rules = [
+            'judul' => 'required|max_length[255]',
+            'slug' => 'permit_empty|alpha_dash',
+            'ringkasan' => 'required',
+            'konten' => 'required',
+            'status' => 'required|in_list[publish,draft]',
+            'kategori_id' => 'required|integer|greater_than[0]',
+        ];
+
+        if (!$this->validate($rules)) {
+            if ($this->request->isAJAX()) {
+                return $this->ajaxResponse(['message' => 'Periksa kembali input artikel.', 'errors' => $this->validator->getErrors()], 422);
+            }
+            session()->setFlashdata('erorr', 'Periksa kembali input artikel.');
+            return redirect()->to('admin/artikel')->withInput();
+        }
+
+        $status = (string) $this->request->getVar('status');
+        $slug = trim((string) $this->request->getVar('slug'));
+        if ($slug === '') {
+            $slug = $this->articleSlug->unique($this->articleSlug->fromJudul($judul), function (string $candidate): bool {
+                return $this->artikelModel->slugExists($candidate);
+            });
+        } elseif ($this->artikelModel->slugExists($slug)) {
+            if ($this->request->isAJAX()) {
+                return $this->ajaxResponse(['message' => 'Slug artikel sudah ada!', 'errors' => ['slug' => 'Slug artikel sudah ada!']], 422);
+            }
+            session()->setFlashdata('erorr', 'Slug artikel sudah ada!');
+            return redirect()->to('admin/artikel')->withInput();
+        }
+
+        $id = $this->saveArticle([
+            'judul' => $judul,
+            'slug' => $slug,
+            'ringkasan' => (string) $this->request->getVar('ringkasan'),
+            'konten' => (string) $this->request->getVar('konten'),
+            'status' => $status,
+            'published_at' => $this->publishedAt($status, (string) $this->request->getVar('published_at')),
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ], $kategoriId);
+
+        if ($this->request->isAJAX()) {
+            return $this->ajaxResponse(['message' => 'Artikel berhasil ditambahkan', 'row' => $this->articleRow($id)]);
+        }
+
+        session()->setFlashdata('pesan', 'Artikel berhasil ditambahkan');
+        return redirect()->to('admin/artikel');
+    }
+
+    public function updateArtikel()
+    {
+        $id = (int) $this->request->getVar('id');
+        $judul = trim((string) $this->request->getVar('judul'));
+        $kategoriId = (int) $this->request->getVar('kategori_id');
+        $rules = [
+            'id' => 'required|integer|greater_than[0]',
+            'judul' => 'required|max_length[255]',
+            'slug' => 'permit_empty|alpha_dash',
+            'ringkasan' => 'required',
+            'konten' => 'required',
+            'status' => 'required|in_list[publish,draft]',
+            'kategori_id' => 'required|integer|greater_than[0]',
+        ];
+
+        if (!$this->validate($rules)) {
+            if ($this->request->isAJAX()) {
+                return $this->ajaxResponse(['message' => 'Periksa kembali input artikel.', 'errors' => $this->validator->getErrors()], 422);
+            }
+            session()->setFlashdata('update erorr', 'Periksa kembali input artikel.');
+            return redirect()->to('admin/artikel')->withInput();
+        }
+
+        $status = (string) $this->request->getVar('status');
+        $slug = trim((string) $this->request->getVar('slug'));
+        if ($slug === '') {
+            $slug = $this->articleSlug->unique($this->articleSlug->fromJudul($judul), function (string $candidate) use ($id): bool {
+                return $this->artikelModel->slugExists($candidate, $id);
+            });
+        } elseif ($this->artikelModel->slugExists($slug, $id)) {
+            if ($this->request->isAJAX()) {
+                return $this->ajaxResponse(['message' => 'Slug artikel sudah ada!', 'errors' => ['slug' => 'Slug artikel sudah ada!']], 422);
+            }
+            session()->setFlashdata('update erorr', 'Slug artikel sudah ada!');
+            return redirect()->to('admin/artikel')->withInput();
+        }
+
+        $this->saveArticle([
+            'judul' => $judul,
+            'slug' => $slug,
+            'ringkasan' => (string) $this->request->getVar('ringkasan'),
+            'konten' => (string) $this->request->getVar('konten'),
+            'status' => $status,
+            'published_at' => $this->publishedAt($status, (string) $this->request->getVar('published_at')),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ], $kategoriId, $id);
+
+        if ($this->request->isAJAX()) {
+            return $this->ajaxResponse(['message' => 'Artikel berhasil diubah', 'row' => $this->articleRow($id)]);
+        }
+
+        session()->setFlashdata('pesan', 'Artikel berhasil diubah');
+        return redirect()->to('admin/artikel');
+    }
+
+    public function deleteArtikel()
+    {
+        $id = (int) $this->request->getVar('id');
+        $this->db->table('artikel_kategori')->where('artikel_id', $id)->delete();
+        $this->artikelModel->where('id', $id)->delete();
+
+        if ($this->request->isAJAX()) {
+            return $this->ajaxResponse(['message' => 'Artikel berhasil dihapus', 'row' => ['id' => $id]]);
+        }
+
+        session()->setFlashdata('pesan', 'Artikel berhasil dihapus');
+        return redirect()->to('admin/artikel');
+    }
+
+    private function saveArticle(array $data, int $kategoriId, int $id = 0): int
+    {
+        if ($id > 0) {
+            $this->artikelModel->where('id', $id)->set($data)->update();
+        } else {
+            $this->artikelModel->save($data);
+            $id = (int) $this->artikelModel->getInsertID();
+        }
+
+        $this->artikelModel->saveCategories($id, [$kategoriId]);
+
+        return $id;
+    }
+
+    private function publishedAt(string $status, string $publishedAt): ?string
+    {
+        if ($status !== 'publish') {
+            return null;
+        }
+
+        return $publishedAt !== '' ? $publishedAt : date('Y-m-d H:i:s');
+    }
+
+    private function articleRow(int $id): array
+    {
+        $article = $this->artikelModel->findById($id) ?? [];
+        $categoryIds = $this->artikelModel->getCategoryIds($id);
+        $categories = $this->artikelModel->getCategoryOptions();
+        $firstCategory = $categoryIds[0] ?? 0;
+
+        return [
+            'id' => $id,
+            'judul' => $article['judul'] ?? '',
+            'slug' => $article['slug'] ?? '',
+            'status' => $article['status'] ?? '',
+            'kategori' => $categories[$firstCategory] ?? '',
+        ];
     }
 }

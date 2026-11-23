@@ -9,7 +9,7 @@
     <ul class="navbar-nav ml-auto">
 
 
-        <div class="topbar-divider d-none d-sm-block"></div>
+        <li class="topbar-divider d-none d-sm-block"></li>
 
         <!-- Nav Item - User Information -->
         <li class="nav-item dropdown no-arrow">
@@ -19,7 +19,7 @@
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="<?= base_url('user/profile'); ?>">
+                <a class="dropdown-item" href="<?= base_url(in_groups('admin') ? 'admin/profile' : 'user/profile'); ?>">
                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                     My Profile
                 </a>

@@ -24,7 +24,7 @@
                     <div class="col-mb-auto">
                         <form action="" method="GET">
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" placeholder="Cari gejala" name="keyword">
+                                <input type="text" class="form-control" placeholder="Cari penyakit" name="keyword" value="<?= esc($keyword ?? ''); ?>">
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-secondary" type="submit" name="submit">Search</button>
                                 </div>
@@ -37,6 +37,7 @@
     </div>
     <div class="row">
         <div class="col-lg-8">
+            <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -65,8 +66,14 @@
                             </td>
                         </tr>
                     <?php endforeach; ?>
+                    <?php if (empty($penyakit)) : ?>
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">Tidak ada data penyakit.</td>
+                        </tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
+            </div>
 
             <?= $pager->links('penyakit', 'user_pagination') ?>
         </div>

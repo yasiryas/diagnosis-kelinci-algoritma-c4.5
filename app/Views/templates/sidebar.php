@@ -1,11 +1,11 @@
  <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
      <!-- Sidebar - Brand -->
-     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?= base_url('index.php'); ?>">
+     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?= base_url(in_groups('admin') ? 'admin' : 'user'); ?>">
          <div class="sidebar-brand-icon rotate-n-15">
-             <i class="fas fa-stethoscope"></i>
+             <img src="<?= base_url('img/rabbit.svg'); ?>" alt="">
          </div>
-         <div class="sidebar-brand-text mx-3">Diagnosic Rabbit</div>
+         <div class="sidebar-brand-text mx-3">Diagnosis Kelinci</div>
      </a>
 
 
@@ -31,8 +31,22 @@
                  <span>User List</span></a>
          </li>
 
+         <!-- Nav Item - Profile Admin -->
+         <li class="nav-item <?= ($title == 'My Profile') ? 'active' : ''; ?>">
+             <a class="nav-link" href="<?= base_url('admin/profile'); ?>">
+                 <i class="fas fa-user"></i>
+                 <span>My Profile</span></a>
+         </li>
+
+         <!-- Nav Item - Hasil Mining -->
+         <li class="nav-item <?= ($title == 'Data Mining') ? 'active' : ''; ?>">
+             <a class="nav-link" href="<?= base_url('mining/hitung'); ?>">
+                 <i class="fas fa-chart-bar"></i>
+                 <span>Hasil Mining</span></a>
+         </li>
+
          <!-- Nav Item - Management data -->
-         <li class="nav-item <?= ($title == 'Management Data' || $title == 'Gejala' || $title == 'Penyakit' || $title == 'Data Diagnosis') ? 'active' : ''; ?>">
+         <li class="nav-item <?= ($title == 'Management Data' || $title == 'Data Gejala' || $title == 'Data Penyakit' || $title == 'Data Sample') ? 'active' : ''; ?>">
              <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
                  <i class="fas fa-tasks"></i>
                  <span>Management Data</span>
@@ -46,12 +60,18 @@
              </div>
          </li>
 
-         <!-- Nav Item - Decission Tree -->
-         <li class="nav-item <?= ($title == 'Decision Tree') ? 'active' : ''; ?>">
-             <a class="nav-link" href="<?= base_url('admin/decisiontree'); ?>">
-                 <i class="fas fa-code-branch"></i>
-                 <span>Decision Tree</span></a>
-         </li>
+          <!-- Nav Item - Decission Tree -->
+          <li class="nav-item <?= ($title == 'Decision Tree') ? 'active' : ''; ?>">
+              <a class="nav-link" href="<?= base_url('admin/decisiontree'); ?>">
+                  <i class="fas fa-code-branch"></i>
+                  <span>Decision Tree</span></a>
+          </li>
+
+          <li class="nav-item <?= ($title == 'Data Artikel') ? 'active' : ''; ?>">
+              <a class="nav-link" href="<?= base_url('admin/artikel'); ?>">
+                  <i class="fas fa-newspaper"></i>
+                  <span>Artikel</span></a>
+          </li>
 
 
      <?php elseif (in_groups('user')) : ?>
@@ -78,12 +98,14 @@
      <?php endif; ?>
 
 
-     <!-- Nav Item - My Profile -->
-     <li class="nav-item <?= ($title == 'My Profile') ? 'active' : ''; ?>">
-         <a class="nav-link" href="<?= base_url('user/profile'); ?>">
-             <i class="fas fa-user"></i>
-             <span>My Profile</span></a>
-     </li>
+     <?php if (in_groups('user')) : ?>
+         <!-- Nav Item - My Profile -->
+         <li class="nav-item <?= ($title == 'My Profile') ? 'active' : ''; ?>">
+             <a class="nav-link" href="<?= base_url('user/profile'); ?>">
+                 <i class="fas fa-user"></i>
+                 <span>My Profile</span></a>
+         </li>
+     <?php endif; ?>
 
      <!-- Nav Item - Logout -->
      <li class="nav-item">

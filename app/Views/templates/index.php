@@ -8,21 +8,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta name="csrf-token" content="<?= csrf_hash(); ?>">
 
     <title><?= $title; ?></title>
 
     <!-- Custom fonts for this template-->
     <link href="<?= base_url(); ?>/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet">
 
     <!-- Custom styles for this template-->
     <link href="<?= base_url(); ?>/css/sb-admin-2.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
-    </script>
-
+    <link href="<?= base_url(); ?>/css/app.css" rel="stylesheet">
 </head>
 
-<body id="page-top">
+<body id="page-top" data-csrf-name="<?= csrf_token(); ?>">
 
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -85,6 +84,8 @@
 
     <!-- Custom scripts for all pages-->
     <script src="<?= base_url(); ?>/js/sb-admin-2.min.js"></script>
+    <script src="<?= base_url(); ?>/js/admin-crud.js"></script>
+    <?= $this->renderSection('scripts'); ?>
 
     <script>
         function previewImage() {

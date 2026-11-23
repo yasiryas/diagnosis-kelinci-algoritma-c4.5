@@ -1,79 +1,26 @@
 <?= $this->extend('templates/index'); ?>
 
-
 <?= $this->section('page-content'); ?>
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-8">
-            <h2 class="my-3">Edit Profile</h2>
+        <div class="col-lg-8">
+            <h1 class="h3 mb-4 text-gray-800">Edit Profile</h1>
 
-            <form action="/user/updateprofile" method="post" enctype="multipart/form-data">
-                <?= csrf_field(); ?>
-
-                <input type="hidden" name="userImageOld" value="<?= user()->user_image; ?>">
-
-                <!-- form email -->
-                <div class="form-group row">
-                    <label for="judul" class="col-sm-2 col-form-label">Email</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control <?= ($validation->hasError('email')) ? 'is-invalid' : ''; ?>" id="email" name="email" autofocus value="<?= (old('email')) ? old('email') : user()->email; ?>" readonly>
-                        <div class="invalid-feedback">
-                            <?= $validation->getError('email'); ?>
-                        </div>
+            <div class="card shadow mb-4">
+                <div class="card-body d-flex align-items-center">
+                    <img src="<?= base_url('img/profile/' . user()->user_image); ?>" class="img-thumbnail img-profile mr-4" alt="Foto profil">
+                    <div>
+                        <h5 class="mb-1"><?= esc(user()->fullname); ?></h5>
+                        <p class="text-muted mb-0"><?= esc(user()->username); ?> · <?= esc(user()->email); ?></p>
                     </div>
                 </div>
-
-                <!-- form username -->
-                <div class="form-group row">
-                    <label for="username" class="col-sm-2 col-form-label">Username</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control <?= ($validation->hasError('username')) ? 'is-invalid' : ''; ?>" id="username" name="username" value="<?= (old('username')) ? old('username') : user()->username; ?>">
-                        <div class="invalid-feedback">
-                            <?= $validation->getError('username'); ?>
-                        </div>
-                    </div>
+                <div class="card-footer bg-white border-0">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#profileModal">Edit profil</button>
+                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#passwordModal">Ganti password</button>
+                    <a href="<?= base_url('user/profile'); ?>" class="btn btn-secondary">Kembali</a>
                 </div>
-
-                <!-- form fullname -->
-                <div class="form-group row">
-                    <label for="fullname" class="col-sm-2 col-form-label">Fullname</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control <?= ($validation->hasError('fullname')) ? 'is-invalid' : ''; ?>" id="fullname" name="fullname" value="<?= (old('fullname')) ? old('fullname') : user()->fullname; ?>">
-                        <div class="invalid-feedback">
-                            <?= $validation->getError('fullname'); ?>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Form User Image -->
-                <div class="form-group row">
-                    <label for="user_image" class="col-sm-2 col-form-label">Profile picture</label>
-                    <div class="col-sm-2">
-                        <img src="/img/profile/<?= user()->user_image; ?>" class="img-thumbnail img-preview">
-                    </div>
-                    <div class="col-sm-8">
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input <?= ($validation->hasError('user_image')) ? 'is-invalid' : ''; ?>" id="user_image" name="user_image" onchange="previewImage()">
-                            <div class="invalid-feedback">
-                                <?= $validation->getError('user_image'); ?>
-                            </div>
-                            <label class="custom-file-label" for="user_image" name="user_image"></label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Button Navigation -->
-                <div class="form-group row">
-                    <div class="col-sm-2">
-                    </div>
-                    <div class="col-sm-6">
-                        <button type="submit" class="btn btn-primary">Update</button>
-                        <a href="#" class="btn btn-warning" data-toggle="modal" data-target="#changePasswordModal">Change password</a>
-                        <a href="<?= base_url('user/profile'); ?>" class="btn btn-danger">Cancel</a>
-                    </div>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>

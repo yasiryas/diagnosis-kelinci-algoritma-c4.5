@@ -1,0 +1,58 @@
+:root {
+    --dk-primary: #4e73df;
+    --dk-primary-dark: #2e59d9;
+    --dk-light: #f8f9fc;
+    --dk-border: #dddfeb;
+}
+
+.dk-error-summary {
+    border-left: 4px solid #e74a3b;
+    background: #fff5f5;
+    color: #8a1c10;
+}
+
+.dk-tree {
+    position: relative;
+    min-height: 320px;
+    padding: 1rem;
+    overflow: auto;
+    background: var(--dk-light);
+    border: 1px solid var(--dk-border);
+    border-radius: 0.35rem;
+}
+
+.dk-tree svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.decision-tree-svg {
+    width: 100%;
+    height: auto;
+}
+
+.tree-edge {
+    fill: none;
+    stroke: #e3e6f0;
+    stroke-width: 2;
+}
+
+.tree-node rect {
+    fill: #f8f9fc;
+    stroke: #4e73df;
+}
+
+.tree-node text {
+    fill: #4e73df;
+    font-size: 12px;
+}
+
+.dk-chart-card {
+    border-left: 4px solid var(--dk-primary);
+}
+
+.dk-chart-card .card-header {
+    background: var(--dk-light);
+    border-bottom: 1px solid var(--dk-border);
+}

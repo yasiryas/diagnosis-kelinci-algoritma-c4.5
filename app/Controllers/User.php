@@ -9,6 +9,8 @@ use App\Models\penyakitModel;
 use App\Models\listModel;
 use App\Services\DiagnosisRuleMatcher;
 use App\Services\PasswordChangeValidator;
+use App\Services\DashboardChartData;
+use App\Models\miningModel;
 
 
 class User extends BaseController
@@ -30,6 +32,7 @@ class User extends BaseController
         $this->penyakitModel = new penyakitModel();
         $this->userModel = new UserModel();
         $this->listModel = new listModel();
+        $this->miningModel = new miningModel();
     }
 
     public function index()
@@ -58,6 +61,11 @@ class User extends BaseController
             'gejala' => $countGejala,
             'penyakit' => $countPenyakit,
             'hasil' => $countAllHasil,
+            'chartData' => DashboardChartData::payload([
+                'gejala' => $countGejala,
+                'penyakit' => $countPenyakit,
+                'sample' => $this->miningModel->countDataSample(),
+            ], $this->listModel->countHasilPerPenyakit($id_user)),
         ];
         return view('user/index', $data);
     }
@@ -124,6 +132,12 @@ class User extends BaseController
                 ]
             ]
         ])) {
+            if ($this->request->isAJAX()) {
+                return $this->ajaxResponse([
+                    'message' => 'Data profil belum valid',
+                    'errors' => $this->validator->getErrors(),
+                ], 422);
+            }
             return redirect()->to('/user/edit')->withInput();
         }
 
@@ -144,6 +158,17 @@ class User extends BaseController
             'fullname' => $this->request->getPost('fullname'),
             'user_image' => $nameImage,
         ]);
+
+        if ($this->request->isAJAX()) {
+            return $this->ajaxResponse([
+                'message' => 'Data berhasil diubah',
+                'row' => [
+                    'username' => $this->request->getPost('username'),
+                    'fullname' => $this->request->getPost('fullname'),
+                    'user_image' => $nameImage,
+                ],
+            ]);
+        }
 
         session()->setFlashdata('pesan', 'Data berhasil diubah');
 
@@ -168,6 +193,12 @@ class User extends BaseController
         $user = $this->userModel->find((int) user()->id);
 
         if ($user === null) {
+            if ($this->request->isAJAX()) {
+                return $this->ajaxResponse([
+                    'message' => 'Pengguna tidak ditemukan',
+                    'errors' => ['oldpassword' => 'Pengguna tidak ditemukan'],
+                ], 422);
+            }
             session()->setFlashdata('passwordErrors', ['current' => 'Pengguna tidak ditemukan']);
             return redirect()->to('/user/changepassword');
         }
@@ -181,12 +212,32 @@ class User extends BaseController
         );
 
         if ($errors !== []) {
+            $fieldMap = [
+                'current' => 'oldpassword',
+                'new' => 'newpassword',
+                'confirm' => 'repeatnewpassword',
+            ];
+            $fieldErrors = [];
+            foreach ($errors as $key => $message) {
+                $fieldErrors[$fieldMap[$key] ?? $key] = $message;
+            }
+
+            if ($this->request->isAJAX()) {
+                return $this->ajaxResponse([
+                    'message' => 'Password belum valid',
+                    'errors' => $fieldErrors,
+                ], 422);
+            }
             session()->setFlashdata('passwordErrors', $errors);
             return redirect()->to('/user/changepassword')->withInput();
         }
 
         $user->password = $this->request->getPost('newpassword');
         $this->userModel->save($user);
+
+        if ($this->request->isAJAX()) {
+            return $this->ajaxResponse(['message' => 'Password berhasil diubah']);
+        }
 
         session()->setFlashdata('pesan', 'Password berhasil diubah');
 
@@ -240,5 +291,28 @@ class User extends BaseController
         ];
 
         return view('/user/hasildiagnosis', $data);
+    }
+
+    public function simpanDiagnosis()
+    {
+        if (user() === null) {
+            session()->setFlashdata('diagnosis', 'Silakan login untuk menyimpan riwayat diagnosis');
+
+            return redirect()->to(site_url('login'));
+        }
+
+        $idPenyakit = (int) $this->request->getPost('id_penyakit');
+        $penyakit = $idPenyakit > 0 ? $this->penyakitModel->hasil($idPenyakit) : null;
+
+        if ($penyakit === null) {
+            session()->setFlashdata('diagnosis', 'Penyakit tidak ditemukan');
+
+            return redirect()->to(site_url('user/prosesdiagnosis'));
+        }
+
+        $this->decisionTreeModel->saveResult((int) user()->id, $idPenyakit, $penyakit->penyakit);
+        session()->setFlashdata('pesan', 'Riwayat diagnosis tersimpan');
+
+        return redirect()->to(site_url('user/index'));
     }
 }

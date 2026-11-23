@@ -2,16 +2,16 @@
 
 
 <?= $this->section('page-content'); ?>
-
-<!-- Begin Page Content -->
 <div class="container-fluid">
-    <!-- Page Heading -->
-    <h1 class="h3 mb-4 text-gray-800">Lapor mining</h1>
-    <?= $entropytotal; ?>
-    <br>
-    <?php foreach ($jumlahkasuspenyakit as $jkp) : ?>
-        <?= $jkp->kategori; ?>-<?= $jkp->gejala; ?>-<?= $jkp->penyakit; ?>-<?= $jkp->total; ?><br>
-    <?php endforeach; ?>
+    <h1 class="h3 mb-4 text-gray-800">Laporan Mining</h1>
+    <div class="alert alert-info" role="alert">
+        Rincian perhitungan gain ratio tersedia pada halaman hasil mining.
+    </div>
+    <a href="<?= base_url('mining/hitung'); ?>" class="btn btn-primary">Lihat hasil mining</a>
+    <form action="<?= base_url('mining/kosong'); ?>" method="post" class="d-inline" data-ajax-form data-ajax-url="<?= base_url('mining/kosong'); ?>" data-ajax-method="post" data-ajax-action="clear" data-ajax-redirect="<?= base_url('admin/datasample'); ?>">
+        <?= csrf_field(); ?>
+        <button type="submit" class="btn btn-outline-danger">Kosongkan data sample</button>
+    </form>
 </div>
 
 <?= $this->endSection(); ?>

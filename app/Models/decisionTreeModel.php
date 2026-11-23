@@ -51,10 +51,9 @@ class decisionTreeModel extends Model
         ]);
     }
 
-    public function countTree()
+    public function countTree(): int
     {
-        $query = $this->db->query("SELECT * FROM `decision_tree`");
-        $sql = $query->getNumRows();
-        return $sql;
+        $query = $this->db->query("SELECT COUNT(*) AS total FROM `decision_tree`");
+        return (int) $query->getRow()->total;
     }
 }

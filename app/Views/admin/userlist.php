@@ -9,7 +9,7 @@
             <h1 class="h3 mb-4 text-gray-800">User List</h1>
             <form action="" method="GET">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Search user" name="keyword">
+                    <input type="text" class="form-control" placeholder="Cari pengguna" name="keyword" value="<?= esc($keyword ?? ''); ?>">
                     <div class="input-group-append">
                         <button class="btn btn-outline-secondary" type="submit" name="submit">Search</button>
                     </div>
@@ -20,6 +20,7 @@
     <div class="row">
         <div class="col-lg-8">
 
+            <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
                     <tr>
@@ -39,17 +40,23 @@
                             <td><?= $user['username']; ?></td>
                             <td><?= $user['email'] ?></td>
                             <td>
-                                <button type="text" class="btn btn-<?= ($user['name'] == 'admin') ? 'success' : 'warning'; ?>">
-                                    <?= $user['name']; ?>
-                                </button>
+                                <span class="badge badge-<?= ($user['name'] == 'admin') ? 'success' : 'warning'; ?> px-3 py-2">
+                                    <?= esc($user['name']); ?>
+                                </span>
                             </td>
                             <td>
                                 <a href="<?= base_url('admin/detail/' . $user['userid']); ?>" class="btn btn-info">detail</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
+                    <?php if (empty($users)) : ?>
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">Tidak ada data pengguna.</td>
+                        </tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
+            </div>
 
             <?= $pager->links('users', 'user_pagination') ?>
         </div>

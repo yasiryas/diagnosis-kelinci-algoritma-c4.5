@@ -46,4 +46,17 @@ class BaseController extends Controller
 		//--------------------------------------------------------------------
 		// E.g.: $this->session = \Config\Services::session();
 	}
+
+	protected function ajaxResponse(array $payload, int $status = 200)
+	{
+		$body = array_merge([
+			'status'  => $status < 400,
+			'message' => '',
+			'errors'  => [],
+			'row'     => null,
+			'csrf'    => csrf_hash(),
+		], $payload);
+
+		return $this->response->setStatusCode($status)->setJSON($body);
+	}
 }

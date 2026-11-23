@@ -35,7 +35,7 @@
 
                                     <div class="form-group">
                                         <label for="email"><?= lang('Auth.email') ?></label>
-                                        <input type="email" class="form-control <?php if (session('errors.email')) : ?>is-invalid<?php endif ?> form-control-user" name="email" aria-describedby="emailHelp" placeholder="<?= lang('Auth.email') ?>" value="<?= old('email') ?>">
+                                        <input type="email" id="email" class="form-control <?php if (session('errors.email')) : ?>is-invalid<?php endif ?> form-control-user" name="email" aria-describedby="emailHelp" placeholder="<?= lang('Auth.email') ?>" value="<?= old('email') ?>">
                                         <div class="invalid-feedback">
                                             <?= session('errors.email') ?>
                                         </div>
@@ -45,7 +45,7 @@
 
                                     <div class="form-group">
                                         <label for="password"><?= lang('Auth.newPassword') ?></label>
-                                        <input type="password" class="form-control <?php if (session('errors.password')) : ?>is-invalid<?php endif ?> form-control-user" name="password">
+                                        <input type="password" id="password" class="form-control <?php if (session('errors.password')) : ?>is-invalid<?php endif ?> form-control-user" name="password">
                                         <div class="invalid-feedback">
                                             <?= session('errors.password') ?>
                                         </div>
@@ -53,7 +53,7 @@
 
                                     <div class="form-group">
                                         <label for="pass_confirm"><?= lang('Auth.newPasswordRepeat') ?></label>
-                                        <input type="password" class="form-control <?php if (session('errors.pass_confirm')) : ?>is-invalid<?php endif ?> form-control-user" name="pass_confirm">
+                                        <input type="password" id="pass_confirm" class="form-control <?php if (session('errors.pass_confirm')) : ?>is-invalid<?php endif ?> form-control-user" name="pass_confirm">
                                         <div class="invalid-feedback">
                                             <?= session('errors.pass_confirm') ?>
                                         </div>

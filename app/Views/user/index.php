@@ -70,6 +70,37 @@
             </div>
         </div>
     <?php endif; ?>
+
+    <div class="row mt-4">
+        <div class="col-lg-6">
+            <div class="card shadow mb-4 dk-chart-card">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Komposisi data</h6>
+                </div>
+                <div class="card-body" style="height: 320px;">
+                    <canvas id="dkCompositionChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card shadow mb-4 dk-chart-card">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Konsultasi per penyakit</h6>
+                </div>
+                <div class="card-body" style="height: 320px;">
+                    <canvas id="dkConsultationChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+<?= $this->endSection(); ?>
+
+<?= $this->section('scripts'); ?>
+<script>
+    window.dkChartData = <?= json_encode($chartData, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+</script>
+<script src="<?= base_url(); ?>/vendor/chart.js/Chart.min.js"></script>
+<script src="<?= base_url(); ?>/js/dashboard-charts.js"></script>
 <?= $this->endSection(); ?>
