@@ -18,13 +18,14 @@ final class DecisionTreeViewTest
     public function testDecisionTreeViewUsesSvgAndCollapsesRawRules(): void
     {
         $view = (string) file_get_contents(APP_ROOT . '/app/Views/admin/decisiontree.php');
+        $fragment = (string) file_get_contents(APP_ROOT . '/app/Views/admin/fragments/decisiontree.php');
         $css = (string) file_get_contents(APP_ROOT . '/public/css/app.css');
 
         expectTrue(strpos($view, '<?= $svg; ?>') !== false, 'View harus merender svg.');
         expectTrue(strpos($view, '<?= $treeList; ?>') !== false, 'View harus merender fallback aksesibel.');
-        expectTrue(strpos($view, '<details') !== false, 'Tabel aturan harus berada di dalam details.');
-        expectTrue(strpos($view, 'Lihat aturan mentah') !== false, 'Ringkasan details harus berbahasa Indonesia.');
-        expectTrue(strpos($view, '<table') !== false, 'Tabel tetap dipertahankan sebagai fallback.');
+        expectTrue(strpos($fragment, '<details') !== false, 'Tabel aturan harus berada di dalam details.');
+        expectTrue(strpos($fragment, 'Lihat aturan mentah') !== false, 'Ringkasan details harus berbahasa Indonesia.');
+        expectTrue(strpos($fragment, '<table') !== false, 'Tabel tetap dipertahankan sebagai fallback.');
         expectTrue(strpos($css, '.decision-tree-svg') !== false, 'CSS svg harus tersedia.');
     }
 }

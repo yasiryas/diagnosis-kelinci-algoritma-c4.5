@@ -84,6 +84,10 @@ class Admin extends BaseController
             'keyword' => $keyword,
         ];
 
+        if ($this->request->isAJAX()) {
+            return $this->ajaxResponse(['html' => view('admin/fragments/userlist', $data)]);
+        }
+
         return view('admin/userlist', $data);
     }
 
@@ -107,6 +111,10 @@ class Admin extends BaseController
             'page' => $page,
             'keyword' => $keyword,
         ];
+
+        if ($this->request->isAJAX()) {
+            return $this->ajaxResponse(['html' => view('admin/fragments/gejala', $data)]);
+        }
 
         return view('admin/gejala', $data);
     }
@@ -226,6 +234,10 @@ class Admin extends BaseController
             'keyword' => $keyword,
         ];
 
+        if ($this->request->isAJAX()) {
+            return $this->ajaxResponse(['html' => view('admin/fragments/penyakit', $data)]);
+        }
+
         return view('admin/penyakit', $data);
     }
 
@@ -339,6 +351,10 @@ class Admin extends BaseController
         $data['gejala'] = $this->gejalaModel->findall();
         $data['penyakit'] = $this->penyakitModel->findall();
 
+        if ($this->request->isAJAX()) {
+            return $this->ajaxResponse(['html' => view('admin/fragments/sample', $data)]);
+        }
+
         return view('admin/sample', $data);
     }
 
@@ -431,7 +447,7 @@ class Admin extends BaseController
 
     public function decisionTree()
     {
-        $currentPage = $this->request->getVar('decision_tree') ? $this->request->getVar('decision_tree') : 1;
+        $currentPage = $this->request->getVar('page_decision_tree') ? $this->request->getVar('page_decision_tree') : 1;
         $keyword = $this->request->getVar('keyword');
         $decisiontree = $keyword ? $this->decisionTreeModel->search($keyword) : $this->decisionTreeModel;
 
@@ -459,6 +475,10 @@ class Admin extends BaseController
             'svg' => $graph->toSvg(),
             'treeList' => $graph->toAccessibleList(),
         ];
+
+        if ($this->request->isAJAX()) {
+            return $this->ajaxResponse(['html' => view('admin/fragments/decisiontree', $data)]);
+        }
 
         return view('admin/decisiontree', $data);
     }
@@ -488,6 +508,10 @@ class Admin extends BaseController
             'kategori' => $categories,
             'keyword' => $keyword,
         ];
+
+        if ($this->request->isAJAX()) {
+            return $this->ajaxResponse(['html' => view('admin/fragments/artikel', $data)]);
+        }
 
         return view('admin/artikel', $data);
     }
@@ -527,6 +551,14 @@ class Admin extends BaseController
             return redirect()->to('admin/artikel')->withInput();
         }
 
+        $gambar = trim((string) $this->request->getVar('gambar'));
+        $fileGambar = $this->request->getFile('gambar_file');
+        if ($fileGambar !== null && $fileGambar->isValid() && !$fileGambar->hasMoved()) {
+            $newName = $fileGambar->getRandomName();
+            $fileGambar->move(FCPATH . 'uploads/artikel', $newName);
+            $gambar = base_url('uploads/artikel/' . $newName);
+        }
+
         $id = $this->saveArticle([
             'judul' => $judul,
             'slug' => $slug,
@@ -534,6 +566,7 @@ class Admin extends BaseController
             'konten' => (string) $this->request->getVar('konten'),
             'status' => $status,
             'published_at' => $this->publishedAt($status, (string) $this->request->getVar('published_at')),
+            'gambar' => $gambar,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
         ], $kategoriId);
@@ -583,6 +616,17 @@ class Admin extends BaseController
             return redirect()->to('admin/artikel')->withInput();
         }
 
+        $existing = $this->artikelModel->findById($id);
+        $gambar = trim((string) $this->request->getVar('gambar'));
+        $fileGambar = $this->request->getFile('gambar_file');
+        if ($fileGambar !== null && $fileGambar->isValid() && !$fileGambar->hasMoved()) {
+            $newName = $fileGambar->getRandomName();
+            $fileGambar->move(FCPATH . 'uploads/artikel', $newName);
+            $gambar = base_url('uploads/artikel/' . $newName);
+        } elseif ($gambar === '' && !empty($existing['gambar'])) {
+            $gambar = $existing['gambar'];
+        }
+
         $this->saveArticle([
             'judul' => $judul,
             'slug' => $slug,
@@ -590,6 +634,7 @@ class Admin extends BaseController
             'konten' => (string) $this->request->getVar('konten'),
             'status' => $status,
             'published_at' => $this->publishedAt($status, (string) $this->request->getVar('published_at')),
+            'gambar' => $gambar,
             'updated_at' => date('Y-m-d H:i:s'),
         ], $kategoriId, $id);
 
@@ -651,6 +696,7 @@ class Admin extends BaseController
             'slug' => $article['slug'] ?? '',
             'status' => $article['status'] ?? '',
             'kategori' => $categories[$firstCategory] ?? '',
+            'gambar' => $article['gambar'] ?? '',
         ];
     }
 }

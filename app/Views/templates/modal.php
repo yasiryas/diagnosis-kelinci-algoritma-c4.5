@@ -692,7 +692,7 @@
                 <h5 class="modal-title" id="artikelModalLabel">Tambah artikel</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
-            <form action="/admin/tambahartikel" method="post" class="needs-validation" novalidate id="formArtikel" data-ajax-form data-ajax-url="/admin/tambahartikel" data-ajax-method="post" data-ajax-action="create">
+            <form action="/admin/tambahartikel" method="post" enctype="multipart/form-data" class="needs-validation" novalidate id="formArtikel" data-ajax-form data-ajax-url="/admin/tambahartikel" data-ajax-method="post" data-ajax-action="create">
                 <?= csrf_field(); ?>
                 <div class="alert alert-danger d-none" data-error-summary role="alert" tabindex="-1"></div>
                 <div class="modal-body">
@@ -738,6 +738,14 @@
                         <textarea class="form-control" id="artikelKonten" name="konten" rows="5" required></textarea>
                         <div class="invalid-feedback">Konten harus diisi!</div>
                     </div>
+                    <div class="form-group">
+                        <label for="artikelGambar">Gambar Artikel</label>
+                        <div class="custom-file mb-2">
+                            <input type="file" class="custom-file-input" id="artikelGambarFile" name="gambar_file" accept="image/*">
+                            <label class="custom-file-label" for="artikelGambarFile">Pilih file gambar...</label>
+                        </div>
+                        <input class="form-control" type="text" id="artikelGambar" name="gambar" placeholder="Atau tempel URL gambar eksternal (https://...)">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
@@ -755,7 +763,7 @@
                 <h5 class="modal-title" id="editArtikelModalLabel">Ubah artikel</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
-            <form action="/admin/updateartikel" method="post" class="needs-validation" novalidate id="formEditArtikel" data-ajax-form data-ajax-url="/admin/updateartikel" data-ajax-method="post" data-ajax-action="update">
+            <form action="/admin/updateartikel" method="post" enctype="multipart/form-data" class="needs-validation" novalidate id="formEditArtikel" data-ajax-form data-ajax-url="/admin/updateartikel" data-ajax-method="post" data-ajax-action="update">
                 <?= csrf_field(); ?>
                 <div class="alert alert-danger d-none" data-error-summary role="alert" tabindex="-1"></div>
                 <div class="modal-body">
@@ -801,6 +809,17 @@
                         <label for="editArtikelKonten">Konten</label>
                         <textarea class="form-control" id="editArtikelKonten" name="konten" rows="5" required></textarea>
                         <div class="invalid-feedback">Konten harus diisi!</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editArtikelGambar">Gambar Artikel</label>
+                        <div class="mb-2" id="editArtikelGambarPreviewWrap" style="display:none;">
+                            <img id="editArtikelGambarPreview" src="" alt="Preview" style="max-height: 120px; border-radius: 6px; border: 1px solid #ddd;">
+                        </div>
+                        <div class="custom-file mb-2">
+                            <input type="file" class="custom-file-input" id="editArtikelGambarFile" name="gambar_file" accept="image/*">
+                            <label class="custom-file-label" for="editArtikelGambarFile">Ganti file gambar...</label>
+                        </div>
+                        <input class="form-control" type="text" id="editArtikelGambar" name="gambar" placeholder="Atau tempel URL gambar eksternal (https://...)">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -851,6 +870,14 @@
             $('#editArtikelPublishedAt').val(String(button.data('published-at') || '').replace(' ', 'T'));
             $('#editArtikelRingkasan').val(button.data('ringkasan'));
             $('#editArtikelKonten').val(button.data('konten'));
+            const gbr = button.data('gambar') || '';
+            $('#editArtikelGambar').val(gbr);
+            if (gbr) {
+                $('#editArtikelGambarPreview').attr('src', gbr);
+                $('#editArtikelGambarPreviewWrap').show();
+            } else {
+                $('#editArtikelGambarPreviewWrap').hide();
+            }
             document.getElementById('formEditArtikel').dataset.rowId = String(button.data('row-id'));
             $('#editArtikelModal').modal('show');
         });

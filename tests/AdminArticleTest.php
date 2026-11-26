@@ -35,7 +35,7 @@ final class AdminArticleTest
 
     public function testArticleViewExposesRowMarkers(): void
     {
-        $source = (string) file_get_contents(APP_ROOT . '/app/Views/admin/artikel.php');
+        $source = (string) file_get_contents(APP_ROOT . '/app/Views/admin/fragments/artikel.php');
         expectTrue(strpos($source, 'data-row-id=') !== false, 'Baris artikel butuh data-row-id.');
         foreach (['judul', 'slug', 'status', 'kategori'] as $field) {
             expectTrue(strpos($source, 'data-field="' . $field . '"') !== false, "Baris artikel butuh data-field {$field}.");

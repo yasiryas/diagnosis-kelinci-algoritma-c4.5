@@ -22,7 +22,7 @@
                 </div>
                 <div class="col">
                     <div class="col-mb-auto">
-                        <form action="" method="GET">
+                        <form action="" method="GET" data-live-search data-page-param="page_gejala">
                             <div class="input-group mb-3">
                                 <input type="text" class="form-control" placeholder="Cari gejala" name="keyword" value="<?= esc($keyword ?? ''); ?>">
                                 <div class="input-group-append">
@@ -37,45 +37,9 @@
     </div>
     <div class="row">
         <div class="col-lg-8">
-
-            <div class="table-responsive">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">No.</th>
-                        <th scope="col">Kategori</th>
-                        <th scope="col">Gejala</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                    <?php $i = 1 + ($page * ($currentPage - 1));
-                    foreach ($gejala as $g) : ?>
-                        <tr>
-                            <th scope="row"><?= $i++; ?></th>
-                            <td><?= $g['kategori']; ?></td>
-                            <td><?= $g['gejala']; ?></td>
-                            <td>
-                                <a href="#" class="btn btn-info btn-sm btn-edit-gejala" data-id="<?= $g['id_gejala']; ?>" data-kategori="<?= $g['kategori'] ?>" data-gejala="<?= $g['gejala'] ?>">
-                                    Ubah
-                                </a>
-                                <a href="#" class="btn btn-danger btn-sm btn-delete" data-id="<?= $g['id_gejala']; ?>" data-kategori="<?= $g['kategori'] ?>" data-gejala="<?= $g['gejala'] ?>">
-                                    Hapus
-                                </a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                    <?php if (empty($gejala)) : ?>
-                        <tr>
-                            <td colspan="4" class="text-center text-muted py-4">Tidak ada data gejala.</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
+            <div data-admin-list>
+                <?= $this->include('admin/fragments/gejala'); ?>
             </div>
-
-            <?= $pager->links('gejala', 'user_pagination') ?>
         </div>
     </div>
 </div>
