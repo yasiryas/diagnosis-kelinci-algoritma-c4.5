@@ -42,7 +42,6 @@
                     </div>
 
                     <h1 class="h2 font-weight-bold text-gray-900 mb-3"><?= esc($item['judul']); ?></h1>
-                    
                     <div class="lead text-muted p-3 mb-4 border-left border-primary" style="background: #f8f9fc; border-left-width: 4px !important; border-radius: 4px;">
                         <?= esc($item['ringkasan']); ?>
                     </div>
