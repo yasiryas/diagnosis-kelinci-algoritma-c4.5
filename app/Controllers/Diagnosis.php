@@ -9,6 +9,7 @@ use App\Services\DiagnosisRuleMatcher;
 
 class Diagnosis extends BaseController
 {
+    protected $helpers = ['auth'];
     protected $gejalaModel;
     protected $decisionTreeModel;
     protected $penyakitModel;
