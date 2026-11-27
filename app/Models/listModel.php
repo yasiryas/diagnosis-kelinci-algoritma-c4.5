@@ -53,7 +53,7 @@ class listModel extends Model
     public function checkUser($id)
     {
         $query = $this->db->query(
-            'SELECT users.id as userid, username, email, fullname FROM users JOIN auth_groups_users ON auth_groups_users.user_id = users.id JOIN auth_groups ON auth_groups.id = auth_groups_users.group_id where auth_groups_users.user_id = ?',
+            'SELECT users.id as userid, username, email, fullname, auth_groups.name AS name FROM users JOIN auth_groups_users ON auth_groups_users.user_id = users.id JOIN auth_groups ON auth_groups.id = auth_groups_users.group_id where auth_groups_users.user_id = ?',
             [(int) $id]
         );
         $result = $query->getRow();

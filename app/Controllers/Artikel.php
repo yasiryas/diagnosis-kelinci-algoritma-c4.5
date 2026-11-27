@@ -15,9 +15,15 @@ class Artikel extends BaseController
 
     public function index()
     {
+        $keyword = trim((string) $this->request->getVar('keyword'));
+        $kategoriSlug = trim((string) $this->request->getVar('kategori'));
+
         $data = [
-            'title' => 'Artikel',
-            'artikel' => $this->artikelModel->getPublished(),
+            'title' => 'Artikel Panduan Kelinci',
+            'artikel' => $this->artikelModel->getPublished(0, $keyword, $kategoriSlug),
+            'kategoriList' => $this->artikelModel->getCategories(),
+            'currentCategory' => $kategoriSlug,
+            'keyword' => $keyword,
         ];
 
         return view('artikel/index', $data);

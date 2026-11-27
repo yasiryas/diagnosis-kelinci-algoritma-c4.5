@@ -7,11 +7,21 @@ use CodeIgniter\Model;
 class artikelModel extends Model
 {
     protected $table = 'artikel';
-    protected $allowedFields = ['judul', 'slug', 'ringkasan', 'konten', 'status', 'published_at'];
+    protected $allowedFields = ['judul', 'slug', 'ringkasan', 'konten', 'status', 'published_at', 'gambar'];
 
-    public function getPublished(int $limit = 0): array
+    public function getPublished(int $limit = 0, ?string $keyword = null, ?string $kategoriSlug = null): array
     {
         $builder = $this->articleQuery()->where('artikel.status', 'publish');
+        if (!empty($keyword)) {
+            $builder->groupStart()
+                ->like('artikel.judul', $keyword)
+                ->orLike('artikel.ringkasan', $keyword)
+                ->orLike('artikel.konten', $keyword)
+                ->groupEnd();
+        }
+        if (!empty($kategoriSlug)) {
+            $builder->where('kategori_artikel.slug', $kategoriSlug);
+        }
         $builder->orderBy('artikel.published_at', 'DESC');
         if ($limit > 0) {
             $builder->limit($limit);
@@ -118,10 +128,10 @@ class artikelModel extends Model
         }
     }
 
-    private function articleQuery()
+private function articleQuery()
     {
         return $this->db->table('artikel')
-            ->select('artikel.id, artikel.judul, artikel.slug, artikel.ringkasan, artikel.konten, artikel.status, artikel.published_at, kategori_artikel.nama AS nama_kategori, kategori_artikel.id AS kategori_id')
+            ->select('artikel.id, artikel.judul, artikel.slug, artikel.ringkasan, artikel.konten, artikel.status, artikel.published_at, artikel.gambar, kategori_artikel.nama AS nama_kategori, kategori_artikel.id AS kategori_id')
             ->join('artikel_kategori', 'artikel_kategori.artikel_id = artikel.id', 'left')
             ->join('kategori_artikel', 'kategori_artikel.id = artikel_kategori.kategori_id', 'left');
     }
