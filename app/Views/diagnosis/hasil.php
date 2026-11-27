@@ -1,33 +1,49 @@
 <?= $this->extend('templates/public'); ?>
 
 <?= $this->section('page-content'); ?>
-<div class="row">
-    <div class="col-lg-8 mx-auto">
-        <h1 class="h3 mb-4 text-gray-800">Hasil Diagnosis</h1>
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <p class="small text-muted mb-1">Gejala yang dialami</p>
-                <p class="mb-4"><?= esc($gejalaDetail); ?></p>
-                <h2 class="h5 card-title">Kemungkinan penyakit: <?= esc($hasil->penyakit); ?></h2>
-                <hr class="my-4">
-                <h3 class="h6">Solusi</h3>
+<section class="diagnosis-page diagnosis-result-page" aria-labelledby="diagnosis-result-title">
+    <header class="diagnosis-intro">
+        <p class="diagnosis-step" data-diagnosis-step="2">Langkah 2 dari 2</p>
+        <h1 id="diagnosis-result-title">Kemungkinan hasil pemeriksaan</h1>
+        <p>Berikut hasil yang paling sesuai dengan gejala yang dipilih.</p>
+    </header>
+
+    <article class="diagnosis-result-card">
+        <div class="diagnosis-result-match">
+            <p class="diagnosis-result-label">Kemungkinan kondisi</p>
+            <h2><?= esc($hasil->penyakit); ?></h2>
+        </div>
+
+        <div class="diagnosis-result-section">
+            <h3>Gejala yang cocok</h3>
+            <p><?= esc($gejalaDetail); ?></p>
+        </div>
+
+        <div class="diagnosis-result-guidance">
+            <section>
+                <h3>Saran penanganan</h3>
                 <p><?= esc($hasil->solusi); ?></p>
-                <h3 class="h6">Obat</h3>
-                <p class="mb-0"><?= esc($hasil->obat); ?></p>
-            </div>
+            </section>
+            <section>
+                <h3>Obat</h3>
+                <p><?= esc($hasil->obat); ?></p>
+            </section>
         </div>
-        <div class="d-flex flex-wrap align-items-center mt-4">
-            <a class="btn btn-outline-primary mr-2 mb-2" href="<?= base_url('diagnosa'); ?>">Konsultasi lagi</a>
-            <?php if (user() === null) : ?>
-                <a class="btn btn-primary mb-2" href="<?= base_url('login'); ?>">Masuk ke akun</a>
-            <?php else : ?>
-                <form class="mb-2" action="<?= base_url('user/diagnosis'); ?>" method="post">
-                    <?= csrf_field(); ?>
-                    <input type="hidden" name="id_penyakit" value="<?= esc($hasil->id_penyakit, 'attr'); ?>">
-                    <button type="submit" class="btn btn-primary">Simpan riwayat</button>
-                </form>
-            <?php endif; ?>
-        </div>
+
+        <p class="diagnosis-disclaimer">Hasil ini adalah skrining pendukung, bukan pengganti pemeriksaan dokter hewan. Konsultasikan kondisi kelinci kepada dokter hewan, terutama jika gejala berlanjut atau memburuk.</p>
+    </article>
+
+    <div class="diagnosis-result-actions">
+        <a class="diagnosis-secondary-action" href="<?= base_url('diagnosa'); ?>">Periksa gejala lain</a>
+        <?php if (user() === null) : ?>
+            <a class="diagnosis-primary-action" href="<?= base_url('login'); ?>">Masuk ke akun</a>
+        <?php else : ?>
+            <form action="<?= base_url('user/diagnosis'); ?>" method="post">
+                <?= csrf_field(); ?>
+                <input type="hidden" name="id_penyakit" value="<?= esc($hasil->id_penyakit, 'attr'); ?>">
+                <button type="submit" class="diagnosis-primary-action">Simpan hasil ke riwayat</button>
+            </form>
+        <?php endif; ?>
     </div>
-</div>
+</section>
 <?= $this->endSection(); ?>

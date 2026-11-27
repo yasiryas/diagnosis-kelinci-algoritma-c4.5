@@ -22,7 +22,7 @@ final class ThemeAssetTest
     public function testAppCssDefinesThemeTokens(): void
     {
         $source = (string) file_get_contents(APP_ROOT . '/public/css/app.css');
-        foreach (['--dk-primary', '--dk-primary-dark', '--dk-light', '--dk-border'] as $token) {
+        foreach (['--dk-primary', '--dk-primary-dark', '--dk-canvas', '--dk-line', '--dk-radius'] as $token) {
             expectTrue(strpos($source, $token) !== false, "{$token} harus ada.");
         }
     }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
 
@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Diagnosict Rabbit Login</title>
+    <title><?= esc($title ?? 'Diagnosis Kelinci') ?></title>
 
     <!-- Custom fonts for this template-->
     <link href="<?= base_url(); ?>/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -17,10 +17,9 @@
 
     <!-- Custom styles for this template-->
     <link href="<?= base_url(); ?>/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="<?= base_url('css/app.css'); ?>" rel="stylesheet">
 
 </head>
-
-<!-- <body class="bg-gradient-primary"> -->
 
 <body class="bg-login-parrent">
 

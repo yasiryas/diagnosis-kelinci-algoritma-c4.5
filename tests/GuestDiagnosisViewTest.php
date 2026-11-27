@@ -12,8 +12,8 @@ final class GuestDiagnosisViewTest
 
         expectTrue(strpos($view, "extend('templates/public')") !== false, 'Form tamu harus memakai layout publik.');
         expectTrue(strpos($view, 'csrf_field()') !== false, 'Form tamu harus punya CSRF.');
-        expectTrue(strpos($view, 'id="gejala-<?= $g[\'id_gejala\']; ?>"') !== false, 'Checkbox harus punya id unik.');
-        expectTrue(strpos($view, 'for="gejala-<?= $g[\'id_gejala\']; ?>"') !== false, 'Label harus mengarah ke checkbox yang sama.');
+        expectTrue(strpos($view, 'id="gejala-<?= esc($gejalaId, \'attr\'); ?>"') !== false, 'Checkbox harus punya id unik.');
+        expectTrue(strpos($view, 'for="gejala-<?= esc($gejalaId, \'attr\'); ?>"') !== false, 'Label harus mengarah ke checkbox yang sama.');
         expectTrue(strpos($view, 'id="diagnosis-errors"') !== false, 'Harus ada error summary.');
         expectTrue(strpos($view, "base_url('diagnosa/proses')") !== false, 'Form harus POST ke endpoint tamu.');
         expectTrue(strpos($view, '$selected') !== false, 'Checkbox harus memakai daftar gejala terpilih.');
@@ -28,7 +28,7 @@ final class GuestDiagnosisViewTest
         expectTrue(strpos($view, "base_url('login')") !== false, 'Tamu harus diarahkan ke login.');
         expectTrue(strpos($view, "base_url('user/diagnosis')") !== false, 'Simpan riwayat harus POST ke user/diagnosis.');
         expectTrue(strpos($view, 'csrf_field()') !== false, 'Form simpan harus punya CSRF.');
-        expectTrue(strpos($view, 'Simpan riwayat') !== false, 'Tombol simpan harus eksplisit.');
+        expectTrue(strpos($view, 'Simpan hasil ke riwayat') !== false, 'Tombol simpan harus eksplisit.');
         expectTrue(strpos($view, 'Masuk ke akun') !== false, 'CTA tamu tidak boleh menjanjikan penyimpanan riwayat.');
         expectTrue(strpos($view, 'Masuk untuk menyimpan riwayat') === false, 'CTA tamu tidak boleh menjanjikan penyimpanan riwayat.');
         expectTrue(strpos($view, 'saveResult') === false, 'View tidak boleh menyimpan langsung.');

@@ -1,3 +1,4 @@
+<?php $this->setData(['title' => 'Daftar — Diagnosis Kelinci']); ?>
 <?= $this->extend('auth/templates/index'); ?>
 
 <?= $this->section('content'); ?>

@@ -49,7 +49,7 @@ $routes->group('user', ['filter' => 'login'], static function ($routes) {
     $routes->post('updateprofile', 'User::updateProfile');
     $routes->post('updatepassword', 'User::updatePassword');
     $routes->get('prosesdiagnosis', 'User::prosesDiagnosis');
-    $routes->post('konsultasi', 'User::konsultasi');
+    $routes->post('konsultasi', 'Diagnosis::proses');
 });
 
 $routes->group('admin', ['filter' => 'admin'], static function ($routes) {

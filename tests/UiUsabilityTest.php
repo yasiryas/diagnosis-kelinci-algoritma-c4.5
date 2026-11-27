@@ -68,6 +68,14 @@ final class UiUsabilityTest
                 continue;
             }
 
+            preg_match_all('/admin\/fragments\/([a-z]+)/', $source, $matches);
+            foreach ($matches[1] as $fragment) {
+                $fragmentPath = APP_ROOT . '/app/Views/admin/fragments/' . $fragment . '.php';
+                if (is_file($fragmentPath)) {
+                    $source .= (string) file_get_contents($fragmentPath);
+                }
+            }
+
             expectTrue(
                 strpos($source, 'Tidak ada data') !== false,
                 str_replace(APP_ROOT . '/', '', $path) . ': halaman perlu pesan saat hasil kosong.'
@@ -157,7 +165,7 @@ final class UiUsabilityTest
 
     public function testRoleIsShownAsABadge(): void
     {
-        $source = (string) file_get_contents(APP_ROOT . '/app/Views/admin/userlist.php');
+        $source = (string) file_get_contents(APP_ROOT . '/app/Views/admin/fragments/userlist.php');
 
         expectTrue(strpos($source, 'class="badge') !== false, 'Role harus ditampilkan sebagai badge.');
         expectTrue(strpos($source, '<button type="text"') === false, 'Role tidak boleh memakai button type="text".');

@@ -4,464 +4,228 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Sistem pendukung keputusan diagnosis penyakit kelinci berbasis algoritma C4.5.">
+    <meta name="description" content="Sistem pendukung keputusan diagnosis penyakit kelinci berbasis algoritma decision tree C4.5.">
     <title>Diagnosis Kelinci — C4.5</title>
+    <link href="<?= base_url('vendor/fontawesome-free/css/all.min.css'); ?>" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700,800,900" rel="stylesheet">
     <link href="<?= base_url('css/sb-admin-2.min.css'); ?>" rel="stylesheet">
-    <style>
-        :root {
-            --ink: #3a3b45;
-            --body: #5a5c69;
-            --muted: #858796;
-            --primary: #4e73df;
-            --primary-dark: #224abe;
-            --canvas: #f8f9fc;
-            --surface: #fff;
-            --line: #e3e6f0;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            margin: 0;
-            background: var(--canvas);
-            color: var(--body);
-            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            line-height: 1.6;
-        }
-
-        a {
-            color: var(--primary);
-        }
-
-        a:hover {
-            color: var(--primary-dark);
-        }
-
-        a:focus-visible,
-        button:focus-visible {
-            outline: 3px solid var(--primary);
-            outline-offset: 3px;
-        }
-
-        .skip-link {
-            position: absolute;
-            left: 1rem;
-            top: -4rem;
-            z-index: 10;
-            border-radius: .35rem;
-            background: var(--primary);
-            color: #fff;
-            padding: .5rem 1rem;
-            text-decoration: none;
-        }
-
-        .skip-link:focus {
-            top: 1rem;
-            color: #fff;
-        }
-
-        .site-header {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 1rem 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            border-bottom: 1px solid var(--line);
-            background: var(--surface);
-        }
-
-        .brand {
-            display: inline-flex;
-            align-items: center;
-            gap: .75rem;
-            color: var(--primary-dark);
-            font-size: 1rem;
-            font-weight: 800;
-            letter-spacing: .05rem;
-            text-decoration: none;
-            text-transform: uppercase;
-        }
-
-        .brand:hover {
-            color: var(--primary-dark);
-        }
-
-        .brand-mark {
-            width: 3rem;
-            height: 2.6rem;
-            display: grid;
-            place-items: center;
-            border-radius: .35rem;
-            background: linear-gradient(180deg, #4e73df 10%, #224abe 100%);
-            transform: rotate(-15deg);
-            box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
-        }
-
-        .brand-mark img {
-            width: 2.5rem;
-            height: auto;
-        }
-
-        .nav-login {
-            border: 1px solid var(--primary);
-            border-radius: .35rem;
-            padding: .4rem 1rem;
-            color: var(--primary);
-            font-size: .875rem;
-            font-weight: 800;
-            text-decoration: none;
-        }
-
-        .nav-login:hover {
-            background: var(--primary);
-            color: #fff;
-        }
-
-        .hero {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 3.5rem 1.5rem 4rem;
-            display: grid;
-            grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
-            align-items: center;
-            gap: 3.5rem;
-        }
-
-        .eyebrow {
-            margin: 0 0 1rem;
-            color: var(--primary);
-            font-size: .75rem;
-            font-weight: 800;
-            letter-spacing: .08em;
-            text-transform: uppercase;
-        }
-
-        h1 {
-            margin: 0;
-            max-width: 13ch;
-            color: var(--ink);
-            font-size: clamp(2.25rem, 4.5vw, 3.5rem);
-            font-weight: 800;
-            line-height: 1.15;
-            letter-spacing: -.02em;
-        }
-
-        .lead {
-            margin: 1.5rem 0 0;
-            max-width: 34rem;
-            color: var(--body);
-            font-size: 1.05rem;
-        }
-
-        .actions {
-            margin-top: 2rem;
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            border: 1px solid var(--primary);
-            border-radius: .35rem;
-            background: var(--primary);
-            color: #fff;
-            padding: .65rem 1.35rem;
-            font-size: .95rem;
-            font-weight: 800;
-            text-decoration: none;
-            box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
-        }
-
-        .btn-primary:hover {
-            border-color: #2653d4;
-            background: #2e59d9;
-            color: #fff;
-        }
-
-        .btn-text {
-            color: var(--primary);
-            font-size: .9rem;
-            font-weight: 800;
-            text-decoration: none;
-        }
-
-        .btn-text:hover {
-            color: var(--primary-dark);
-            text-decoration: underline;
-        }
-
-        .note {
-            margin: 1.5rem 0 0;
-            color: var(--muted);
-            font-size: .8rem;
-        }
-
-        .flow-card {
-            overflow: hidden;
-            border: 1px solid var(--line);
-            border-radius: .35rem;
-            background: var(--surface);
-            box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .15);
-        }
-
-        .flow-heading {
-            margin: 0;
-            padding: .85rem 1.25rem;
-            color: #fff;
-            font-size: .8rem;
-            font-weight: 800;
-            letter-spacing: .05rem;
-            text-transform: uppercase;
-        }
-
-        .flow-body {
-            padding: 1.25rem;
-        }
-
-        .flow-steps {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-            display: grid;
-            gap: .75rem;
-        }
-
-        .flow-steps li,
-        .flow-result {
-            display: flex;
-            align-items: center;
-            gap: .9rem;
-            border: 1px solid var(--line);
-            border-radius: .35rem;
-            padding: .75rem 1rem;
-        }
-
-        .step-index {
-            width: 2rem;
-            height: 2rem;
-            flex: 0 0 auto;
-            display: grid;
-            place-items: center;
-            border-radius: .35rem;
-            background: var(--primary);
-            color: #fff;
-            font-size: .8rem;
-            font-weight: 800;
-        }
-
-        .flow-steps strong,
-        .flow-result strong {
-            display: block;
-            color: var(--ink);
-            line-height: 1.3;
-        }
-
-        .flow-steps small,
-        .flow-result small {
-            display: block;
-            color: var(--muted);
-            font-size: .8rem;
-        }
-
-        .flow-result {
-            margin-top: .75rem;
-            background: var(--canvas);
-        }
-
-        .pulse {
-            width: 2rem;
-            height: 2rem;
-            flex: 0 0 auto;
-            color: var(--primary);
-        }
-
-        .steps {
-            border-top: 1px solid var(--line);
-            background: var(--surface);
-            padding: 3.5rem 1.5rem 4rem;
-        }
-
-        .steps-inner {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        .steps h2 {
-            margin: 0 0 1.75rem;
-            color: var(--ink);
-            font-size: clamp(1.4rem, 2.5vw, 1.8rem);
-            font-weight: 800;
-            letter-spacing: -.01em;
-        }
-
-        .step-grid {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 1rem;
-        }
-
-        .step-grid article {
-            border: 1px solid var(--line);
-            border-radius: .35rem;
-            padding: 1.25rem;
-            box-shadow: 0 .15rem 1.75rem 0 rgba(58, 59, 69, .08);
-        }
-
-        .step-number {
-            color: var(--primary);
-            font-size: .75rem;
-            font-weight: 800;
-            letter-spacing: .08em;
-        }
-
-        .step-grid h3 {
-            margin: .4rem 0 .35rem;
-            color: var(--ink);
-            font-size: 1rem;
-            font-weight: 800;
-        }
-
-        .step-grid p {
-            margin: 0;
-            font-size: .9rem;
-        }
-
-        footer {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 1.5rem;
-            color: var(--muted);
-            font-size: .8rem;
-        }
-
-        @media (max-width: 820px) {
-            .hero {
-                grid-template-columns: 1fr;
-                gap: 2.5rem;
-                padding-top: 2rem;
-            }
-
-            h1 {
-                max-width: none;
-            }
-
-            .step-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            html {
-                scroll-behavior: auto;
-            }
-        }
-    </style>
+    <link href="<?= base_url('css/app.css'); ?>" rel="stylesheet">
 </head>
 
 <body>
     <a class="skip-link" href="#main">Lewati ke konten</a>
 
-    <header class="site-header">
-        <a class="brand" href="<?= base_url('/'); ?>">
-            <span class="brand-mark">
-                <img src="<?= base_url('img/rabbit.svg'); ?>" alt="">
+    <header class="sticky-top dk-public-header">
+        <a class="dk-public-brand" href="<?= base_url('/'); ?>">
+            <span class="dk-public-brand-mark">
+                <img src="<?= base_url('img/rabbit.svg'); ?>" alt="" aria-hidden="true">
             </span>
             <span>Diagnosis Kelinci</span>
         </a>
-        <a class="nav-login" href="<?= base_url('login'); ?>">Masuk</a>
+        <nav class="dk-public-nav" aria-label="Navigasi utama">
+            <a href="#keunggulan">Keunggulan</a>
+            <a href="#cara-kerja">Cara kerja</a>
+            <a href="#artikel-terbaru">Artikel</a>
+            <a class="dk-btn-outline" href="<?= base_url('login'); ?>">Masuk</a>
+        </nav>
     </header>
 
-    <main id="main">
-        <section class="hero">
-            <div class="hero-copy">
-                <p class="eyebrow">Sistem pendukung keputusan</p>
-                <h1>Kenali penyakit kelinci lebih cepat.</h1>
-                <p class="lead">Pilih gejala yang terlihat, biarkan algoritma C4.5 membantu mengarahkan kemungkinan penyakit dan langkah berikutnya.</p>
-                <div class="actions">
-                    <a class="btn btn-primary" href="<?= base_url('mulai-diagnosis'); ?>">Mulai diagnosis</a>
-                    <a class="btn-text" href="#cara-kerja">Lihat cara kerja</a>
+    <main id="main" tabindex="-1">
+        <!-- Hero Section -->
+        <section class="dk-hero">
+            <div class="dk-hero-copy">
+                <p class="eyebrow"><i class="fas fa-brain mr-1"></i> Sistem pendukung keputusan</p>
+                <h1>Kenali penyakit kelinci lebih cepat & akurat.</h1>
+                <p class="lead">Pilih gejala klinis yang terlihat pada kelinci. Algoritma pohon keputusan C4.5 membantu menganalisis kemungkinan penyakit serta tindakan solusi awal.</p>
+                <div class="d-flex flex-wrap align-items-center mb-3" style="gap: 1rem;">
+                    <a class="dk-btn-primary" href="<?= base_url('mulai-diagnosis'); ?>">
+                        Mulai diagnosis<i class="fas fa-arrow-right ml-2" aria-hidden="true"></i>
+                    </a>
+                    <a class="font-weight-bold text-dark ml-2" href="#cara-kerja">
+                        Lihat cara kerja <i class="fas fa-chevron-down ml-1"></i>
+                    </a>
                 </div>
-                <p class="note">Untuk peternak dan praktisi. Bukan pengganti pemeriksaan dokter hewan.</p>
+                <p class="note mb-0 text-muted small">
+                    <i class="fas fa-info-circle mr-1"></i> Untuk peternak dan praktisi pemelihara kelinci. Bukan pengganti pemeriksaan dokter hewan.
+                </p>
             </div>
 
-            <div class="hero-visual">
-                <div class="flow-card card">
-                    <div class="flow-heading bg-gradient-primary">Alur konsultasi</div>
-                    <div class="flow-body card-body">
-                        <ol class="flow-steps">
-                            <li>
-                                <span class="step-index badge badge-primary">1</span>
-                                <span><strong>Gejala</strong><small>Pilih tanda yang dialami kelinci.</small></span>
-                            </li>
-                            <li>
-                                <span class="step-index badge badge-primary">2</span>
-                                <span><strong>C4.5</strong><small>Aturan pohon keputusan menilai kombinasi gejala.</small></span>
-                            </li>
-                        </ol>
-                        <div class="flow-result">
-                            <svg class="pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M3 12h4l2.5-6 4 12 2.5-6H21"></path>
-                            </svg>
-                            <span><strong>Hasil</strong><small>Kemungkinan penyakit beserta langkah lanjutan.</small></span>
+            <div class="dk-hero-visual">
+                <div class="card dk-hero-card">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <span class="font-weight-bold"><i class="fas fa-project-diagram mr-1"></i> Alur konsultasi</span>
+                        <span class="badge badge-light px-2 py-1 font-weight-bold">C4.5</span>
+                    </div>
+                    <div class="card-body">
+                        <img class="dk-hero-rabbit" src="<?= base_url('img/rabbit.svg'); ?>" alt="" aria-hidden="true">
+                        <div class="mt-4 pt-3 border-top">
+                            <p class="mb-2"><strong>Gejala</strong> — pilih tanda klinis yang dialami kelinci.</p>
+                            <p class="mb-2"><strong>C4.5</strong> — aturan pohon keputusan menilai kombinasi gejala.</p>
+                            <p class="mb-0"><strong>Hasil</strong> — kemungkinan penyakit beserta rekomendasi langkah lanjutan.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="steps" id="cara-kerja">
-            <div class="steps-inner">
-                <h2>Tiga langkah, tanpa ribet.</h2>
-                <div class="step-grid">
-                    <article class="card">
-                        <span class="step-number">01</span>
-                        <h3>Pilih gejala</h3>
-                        <p>Centang tanda yang terlihat pada kelinci, lalu lanjutkan.</p>
-                    </article>
-                    <article class="card">
-                        <span class="step-number">02</span>
-                        <h3>Proses aturan</h3>
-                        <p>Sistem mencocokkan pilihan dengan aturan pohon keputusan C4.5.</p>
-                    </article>
-                    <article class="card">
-                        <span class="step-number">03</span>
-                        <h3>Baca hasil</h3>
-                        <p>Lihat kemungkinan diagnosis dan gunakan sebagai panduan awal.</p>
-                    </article>
+        <!-- Highlights Strip -->
+        <section class="dk-highlights-bar">
+            <div class="dk-highlight-item">
+                <div class="dk-highlight-icon">
+                    <i class="fas fa-tree"></i>
+                </div>
+                <div class="dk-highlight-text">
+                    <strong>Algoritma C4.5</strong>
+                    <span>Pohon keputusan matematis</span>
+                </div>
+            </div>
+            <div class="dk-highlight-item">
+                <div class="dk-highlight-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="dk-highlight-text">
+                    <strong>Deteksi Cepat</strong>
+                    <span>Hasil keluar dalam hitungan detik</span>
+                </div>
+            </div>
+            <div class="dk-highlight-item">
+                <div class="dk-highlight-icon">
+                    <i class="fas fa-capsules"></i>
+                </div>
+                <div class="dk-highlight-text">
+                    <strong>Solusi & Obat</strong>
+                    <span>Panduan pertolongan pertama</span>
+                </div>
+            </div>
+            <div class="dk-highlight-item">
+                <div class="dk-highlight-icon">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <div class="dk-highlight-text">
+                    <strong>Artikel Edukatif</strong>
+                    <span>Tips nutrisi & perawatan kelinci</span>
                 </div>
             </div>
         </section>
 
-        <section class="steps" id="artikel-terbaru">
-            <div class="steps-inner">
-                <h2>Artikel terbaru.</h2>
-                <div class="step-grid">
-                    <?php foreach ($artikelRingkasan as $item) : ?>
-                        <article class="card">
+        <!-- Keunggulan Section -->
+        <section class="dk-section-grid" id="keunggulan">
+            <h2>Mengapa menggunakan sistem ini?</h2>
+            <article class="dk-info-card card">
+                <div class="text-primary mb-2" style="font-size: 1.5rem;">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <h3>Kalkulasi C4.5 yang Teruji</h3>
+                <p>Menggunakan perhitungan Entropy dan Information Gain yang ditransformasikan menjadi pohon keputusan terstruktur untuk akurasi klasifikasi penyakit.</p>
+            </article>
+
+            <article class="dk-info-card card">
+                <div class="text-primary mb-2" style="font-size: 1.5rem;">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3>Akses Mudah Kapan Saja</h3>
+                <p>Dapat dibuka langsung dari ponsel atau komputer tanpa instalasi rumit. Sangat praktis saat Anda berada di kandang dan perlu diagnosis cepat.</p>
+            </article>
+
+            <article class="dk-info-card card">
+                <div class="text-primary mb-2" style="font-size: 1.5rem;">
+                    <i class="fas fa-shield-virus"></i>
+                </div>
+                <h3>Solusi Medis & Pencegahan</h3>
+                <p>Tidak hanya memberikan nama penyakit, sistem juga menyertakan saran obat awal dan tindakan solusi agar kelinci segera tertolong.</p>
+            </article>
+        </section>
+
+        <!-- Cara Kerja Section -->
+        <?php
+        $steps = [
+            ['01', 'Pilih gejala', 'Centang tanda yang terlihat pada kelinci, lalu lanjutkan.'],
+            ['02', 'Proses aturan', 'Sistem mencocokkan pilihan dengan aturan pohon keputusan C4.5.'],
+            ['03', 'Baca hasil', 'Lihat kemungkinan diagnosis dan gunakan sebagai panduan awal.'],
+        ];
+        ?>
+        <section class="dk-section-grid" id="cara-kerja">
+            <h2>Tiga langkah, tanpa ribet.</h2>
+            <?php foreach ($steps as [$number, $heading, $description]) : ?>
+                <article class="dk-info-card card">
+                    <span class="text-dark font-weight-bold mb-2"><?= $number ?></span>
+                    <h3><?= $heading ?></h3>
+                    <p><?= $description ?></p>
+                </article>
+            <?php endforeach; ?>
+        </section>
+
+        <!-- Artikel Section -->
+        <section class="dk-section-grid" id="artikel-terbaru">
+            <h2>Artikel terbaru.</h2>
+            <?php if (empty($artikelRingkasan)) : ?>
+                <div class="col-12 text-center text-muted py-5 card">
+                    <p class="mb-0">Belum ada artikel yang diterbitkan.</p>
+                </div>
+            <?php else : ?>
+                <?php foreach ($artikelRingkasan as $item) : ?>
+                    <article class="dk-info-card card p-0 overflow-hidden">
+                        <?php if (!empty($item['gambar'])) : ?>
+                            <div class="dk-card-media">
+                                <img src="<?= esc($item['gambar'], 'attr'); ?>" alt="" class="card-img-top" loading="lazy" width="600" height="400" referrerpolicy="no-referrer">
+                            </div>
+                        <?php endif; ?>
+                        <div class="card-body">
                             <h3><?= esc($item['judul']); ?></h3>
                             <p><?= esc($item['ringkasan']); ?></p>
                             <a href="<?= base_url('artikel/' . esc($item['slug'], 'attr')); ?>">Baca artikel</a>
-                        </article>
-                    <?php endforeach; ?>
-                </div>
-                <a class="btn btn-primary" href="<?= base_url('artikel'); ?>">Lihat semua artikel</a>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
+            <?php endif; ?>
+
+            <div class="dk-section-footer">
+                <a class="dk-btn-outline" href="<?= base_url('artikel'); ?>">Lihat semua artikel</a>
             </div>
+        </section>
+
+        <!-- CTA Banner -->
+        <section class="dk-cta-banner">
+            <h2>Kelinci Anda Menunjukkan Gejala Sakit?</h2>
+            <p>Jangan tunggu kondisi semakin parah. Cek gejala klinis kelinci sekarang juga untuk penanganan yang tepat dan cepat.</p>
+            <a class="btn-white" href="<?= base_url('mulai-diagnosis'); ?>">
+                Mulai diagnosis <i class="fas fa-stethoscope"></i>
+            </a>
         </section>
     </main>
 
-    <footer>Diagnosis Kelinci · Sistem pendukung keputusan berbasis C4.5</footer>
+    <!-- Footer -->
+    <footer class="dk-footer-complex">
+        <div class="dk-footer-inner">
+            <div class="dk-footer-brand">
+                <h4 class="mb-2">Diagnosis Kelinci</h4>
+                <p>Sistem pakar pendukung keputusan diagnosis penyakit kelinci menggunakan algoritma klasifikasi pohon keputusan C4.5. Membantu peternak dan pehobi mendeteksi gejala sejak dini.</p>
+            </div>
+            <div class="dk-footer-col">
+                <h5>Navigasi</h5>
+                <ul>
+                    <li><a href="<?= base_url('/'); ?>">Beranda</a></li>
+                    <li><a href="#keunggulan">Keunggulan</a></li>
+                    <li><a href="#cara-kerja">Cara Kerja</a></li>
+                    <li><a href="<?= base_url('artikel'); ?>">Artikel & Panduan</a></li>
+                    <li><a href="<?= base_url('mulai-diagnosis'); ?>">Konsultasi Diagnosis</a></li>
+                </ul>
+            </div>
+            <div class="dk-footer-col">
+                <h5>Layanan</h5>
+                <ul>
+                    <li><a href="<?= base_url('login'); ?>">Masuk Sistem</a></li>
+                    <li><a href="<?= base_url('register'); ?>">Daftar Akun Baru</a></li>
+                    <li><a href="<?= base_url('artikel?kategori=perawatan'); ?>">Tips Perawatan</a></li>
+                    <li><a href="<?= base_url('artikel?kategori=penyakit'); ?>">Ensiklopedia Penyakit</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="dk-footer-bottom">
+            <span>&copy; <?= date('Y'); ?> Diagnosis Kelinci C4.5 · Seluruh hak cipta dilindungi.</span>
+            <span class="text-muted small">Catatan: Rekomendasi sistem merupakan skrining pendukung, bukan pengganti pemeriksaan dokter hewan.</span>
+        </div>
+    </footer>
 </body>
 
 </html>

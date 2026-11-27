@@ -1,3 +1,4 @@
+<?php $this->setData(['title' => 'Lupa kata sandi — Diagnosis Kelinci']); ?>
 <?= $this->extend('auth/templates/index'); ?>
 
 <?= $this->section('content'); ?>

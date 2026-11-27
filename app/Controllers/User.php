@@ -49,7 +49,7 @@ class User extends BaseController
         //Jumlah record konsultasi (Admin: All - User: idUser)
         $id_user = user()->id;
         $user = $this->listModel->checkUser($id_user);
-        if ($user->name == "admin") {
+        if ($user && $user->name === 'admin') {
             $countAllHasil = $this->listModel->countAllHasil();
         } else {
             $countAllHasil = $this->listModel->countHasil($id_user);
@@ -72,8 +72,7 @@ class User extends BaseController
 
     public function diagnosis()
     {
-        $data['title'] = 'Diagnosis';
-        return view('user/diagnosis', $data);
+        return redirect()->to(site_url('diagnosa'));
     }
 
     public function profile()
@@ -246,51 +245,7 @@ class User extends BaseController
 
     public function prosesDiagnosis()
     {
-        $gejala = $this->gejalaModel->orderBy('kategori')->findAll();
-
-        $data = [
-            'title' => 'Diagnosis',
-            'gejala' => $gejala,
-        ];
-
-        return view('/user/prosesdiagnosis', $data);
-    }
-
-    public function konsultasi()
-    {
-        $gejala = $this->request->getPost('gejala');
-
-        if (empty($gejala)) {
-            session()->setFlashdata('diagnosis', 'Harus memilih gejala minimal 1');
-            return redirect()->to('/user/prosesdiagnosis');
-        }
-
-        $selected = is_array($gejala) ? $gejala : [$gejala];
-        $matcher = new DiagnosisRuleMatcher();
-        $rule = $matcher->match($selected, $this->decisionTreeModel->findAll());
-
-        if ($rule === null) {
-            session()->setFlashdata('diagnosis', 'Gejala masih belum sesuai, harap pilih gejala yang sesuai!');
-            return redirect()->to('/user/prosesdiagnosis');
-        }
-
-        $idPenyakit = (int) $rule['keputusan'];
-        $penyakit = $this->penyakitModel->hasil($idPenyakit);
-
-        if ($penyakit === null) {
-            session()->setFlashdata('diagnosis', 'Penyakit untuk rule ini tidak ditemukan');
-            return redirect()->to('/user/prosesdiagnosis');
-        }
-
-        $this->decisionTreeModel->saveResult((int) user()->id, $idPenyakit, $penyakit->penyakit);
-
-        $data = [
-            'title' => 'Diagnosis',
-            'hasil' => $penyakit,
-            'gejala' => $rule['detail'] ?? '',
-        ];
-
-        return view('/user/hasildiagnosis', $data);
+        return redirect()->to(site_url('diagnosa'));
     }
 
     public function simpanDiagnosis()

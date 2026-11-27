@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 define('APP_ROOT', dirname(__DIR__));
 
+require_once __DIR__ . '/Support/ViewRenderer.php';
+
 spl_autoload_register(static function (string $class): void {
     $prefixes = [
         'App\\' => APP_ROOT . '/app/',
@@ -23,7 +25,7 @@ spl_autoload_register(static function (string $class): void {
     }
 });
 
-function expectSame($expected, $actual, string $message): void
+function expectSame($expected, $actual, string $message = 'Nilai tidak sesuai.'): void
 {
     if ($expected !== $actual) {
         throw new RuntimeException($message . ' — expected ' . var_export($expected, true) . ', got ' . var_export($actual, true));
